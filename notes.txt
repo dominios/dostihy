@@ -1,0 +1,138 @@
+Hracie pole
+  START - každý hráč při projití startem obdrží 4.000,-
+  Fantome - 1.200,- (oranžové pole)
+  Finance
+  Gavora - 1.200,- (oranžové pole)
+  Veterinární vyšetření - 500,-
+  1. trenér - 4.000,-
+  Lady Anne - 2.000,- (hnědé pole)
+  Náhoda
+  Pasek - 2.000,- (hnědé pole)
+  Koran - 2.400,- (hnědé pole)
+  Distanc
+  Neklan - 2.800,- (světle modré pole)
+  Přeprava - 3.000,-
+  Portlancl - 2.800,- (světle modré pole)
+  Japan - 2.800,- (světle modré pole)
+  2. trenér - 4.000,-
+  Kostrava - 3.600,- (zelené pole)
+  Finance
+  Lukava - 3.600,- (zelené pole)
+  Melák - 4.000,- (zelené pole)
+  Parkoviště
+  Grifel - 4.400,- (červené pole)
+  Náhoda
+  Mohyla - 4.400,- (červené pole)
+  Metál - 4.800,- (červené pole)
+  3. trenér - 4.000,-
+  Tara - 5.200,- (žluté pole)
+  Furioso - 5.200,- (žluté pole)
+  Stáje - 3.000,-
+  Genius - 5.600,- (žluté pole)
+  Podezření z dopingu - hráč 1 kolo nehraje
+  Shagga - 6.000,- (tmavě zelené pole)
+  Dahoman - 6.000,- (tmavě zelené pole)
+  Finance
+  Gira - 6.400,- (tmavě zelené pole)
+  4. trenér - 4.000,-
+  Náhoda
+  Narcius - 7.000,- (tmavě modré pole)
+  Veterinární vyšetření - 1.000,-
+  Napoli - 8.000,- (tmavě modré pole)
+
+
+Pravidla
+http://www.deskovehry.info/pravidla/dostihysazky.htm
+
+Rozsirenia (volitelne)
+  - kto zacina hru (hrac? random?)
+  - 1. kole nemoznost kupovat kone
+  - po 3 pokusoch na distance automaticky ist?
+  - distanc moze hadzat 3x?
+  - parkoviste ako "skladka"?
+  - dostihy aj viac ako 1 hlavny (ku hlavnemu dalsie zlte...)
+  - predaj kona spat k banke za menej
+  - pozicky od banky
+  - obmedzene stavkovanie (musi mat 3 a viac zetonov na 1 koni)
+
+Datovy model
+  GameMap typeof (Array of MapField)
+  MapField typeof (Start | Horse | Trainer | Luck | Finance | Distance | Parking | Vet Station | Transport | Stables | Doping)
+  Player has (PlayerInventory, PlayerStatus, name, color)
+  PlayerStatus has (bool isOnTurn?, bool isRacing? (ci platia dostihy), int roundsToHold, int lastThrow, Account account, int round, bool isFirstRound())
+  Account (void withdraw(), void insert(), bool has(amount))
+  Bank (void withdraw(), void insert(), bool has(amount) : true)
+  PlayerInventory typeof (Array of GameCard)
+  GameCard typeof (Horse | Trainer | Stable | Transport | Cancel distance)
+  RacingPoint (1 dostih)
+  MainRaicingPoint (hl. dostih)
+
+Interfaces
+
+  Buyable (MapField has associated GameCard to be bought)
+    + bool isOwned ()
+    + bool canPlayerBuy (Player player)
+    + void buy (Player player) // bud takto alebo bude Player.buy(Buyable gameCard)
+
+  Claimable (MapField which needs to be paid on)
+    + bool shouldPlayerPay (Player player)
+    + int countPlayerPay (Player player)
+    + Player|Bank claimTarget ()
+
+  IHorse (interface for all horses)
+    + int getStableId ()
+
+  ICustomAction
+    + doCusomAction (Player player)
+
+Interface usage:
+
+  Start implements ICustomAction
+  Horse implements Buyable, Claimable, IHorse
+  Trainer implements Buyable, Claimable
+  Stables implements Buyable, Claimable
+  Transport implements Buyable, Claimable
+  VetStation implements Claimable
+  Distance implements ICustomAction
+  Parking implements ICustomAction
+  Luck implements ICustomAction
+  Finance implements ICustomAction
+  Doping implements ICustomAction
+
+
+Game events
+
+
+Game progress:
+
+  1. Start of the game
+    (create players, assign them money & colors, choose first player, shuffle luck & finance cards, render)
+  2. Player round starts
+    a) (if applicable) player can choose to bet
+    b) player draws a dice
+    c) player is moved by number drown
+      c1) does player cross the Start (earn 4000)
+    d) (optional) player can initiate a trade
+    e) apply effect of the game field immediately
+      e1) if target action is pay, jump to f)
+      e2) if player can buy, ask for buy options (add possibility to trade before buy)
+      e3) if player owns the game field, ask for other options (like buy racing point)
+      e4) (if applicable) pick lucky card
+      e5) (if applicable) pick finance card
+      e6) (if applicable) apply custom game field action
+    f) if player must pay, ask for pay options:
+      f1) confirm pay automatically (with money) -> exit f)
+      f2) initiate trade OR trade with bank -> after that return to f1)
+      f3) if player didn't pay yet and has no enough money, ask for selling items to the bank (up to needed money) -> f1)
+      f4) (optional) ask for debet from bank -> f1)
+      f5) if still not enough money: eliminate the player -> exit f)
+    g) (if applicable) ask player to use special game card (like cancel distance)
+  3. Player round ends
+    a) check if he is eliminated
+  4. Start round of next player
+
+
+
+Poznamky
+- multiplayer?
+- AI?
