@@ -1,0 +1,49 @@
+body {
+  background: #ddd;
+}
+
+.game-map {
+  width: 800px;
+  height: 800px;
+  background: white;
+}
+
+.game-map .field {
+    width: 20px;
+    height: 50px;
+    color: white;
+    display: inline-block;
+    background: #eee;
+}
+
+.game-map .field-horse.stable-1 {
+  background: red;
+}
+
+.game-map .field-horse.stable-2 {
+  background: brown;
+}
+
+.game-map .field-horse.stable-3 {
+  background: blue;
+}
+
+.game-map .field-horse.stable-4 {
+  background: green;
+}
+
+.game-map .field-horse.stable-5 {
+  background: pink;
+}
+
+.game-map .field-horse.stable-6 {
+  background: orange;
+}
+
+.game-map .field-horse.stable-7 {
+  background: darkgreen;
+}
+
+.game-map .field-horse.stable-8 {
+  background: violet;
+}
