@@ -1,4 +1,6 @@
 import React from 'react';
+import Bank from './bank/Bank';
+import CurrentPlayer from './player/CurrentPlayer';
 
 export default class App extends React.Component {
 
@@ -7,7 +9,10 @@ export default class App extends React.Component {
     }
 
     render () {
-        return <h1>Dostihy!</h1>;
+        return <div>
+            <Bank/>
+            <CurrentPlayer/>
+        </div>;
     }
 }
 

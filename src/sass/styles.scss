@@ -1,13 +1,47 @@
 $desk-size: 1200px;
+$sidebar-size: 200px;
+
+@mixin panel () {
+  background: #fafafa;
+  padding: 20px;
+}
 
 body {
   background: #aaa;
+  box-shadow: 1px 1px 4px 1px #aaa;
+  padding: 25px;
+  > div {
+    position: relative;
+  }
+}
+
+.bank {
+  @include panel;
+  width: $sidebar-size;
+  position: absolute;
+  right: 0;
+  span {
+    font-weight: bold;
+    font-style: italic;
+  }
+}
+
+.currentPlayer {
+  @include panel;
+  width: $sidebar-size;
+  position: absolute;
+  top: 110px;
+  right: 0;
+  span {
+    font-weight: bold;
+    font-style: italic;
+  }
 }
 
 .game-map {
+  @include panel;
   width: $desk-size;
   height: $desk-size;
-  background: white;
 
   .field {
     width: 110px;
@@ -19,6 +53,7 @@ body {
     font-weight: bold;
     padding-top: 10px;
     margin: 15px;
+    box-shadow: 1px 1px 4px 1px #aaa;
 
     &.field-start {
       background: indianred;
