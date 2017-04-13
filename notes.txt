@@ -56,8 +56,10 @@ Rozsirenia (volitelne)
   - obmedzene stavkovanie (musi mat 3 a viac zetonov na 1 koni)
 
 Datovy model
+  GameState (kto je na rade, ...)
   GameMap typeof (Array of MapField)
   MapField typeof (Start | Horse | Trainer | Luck | Finance | Distance | Parking | Vet Station | Transport | Stables | Doping)
+    has (null|Player stayingOn, int numberOfStandardRacingPoints, int numberOfMainRacingPoints)
   Player has (PlayerInventory, PlayerStatus, name, color)
   PlayerStatus has (bool isOnTurn?, bool isRacing? (ci platia dostihy), int roundsToHold, int lastThrow, Account account, int round, bool isFirstRound())
   Account (void withdraw(), void insert(), bool has(amount))
@@ -100,10 +102,7 @@ Interface usage:
   Doping implements ICustomAction
 
 
-Game events
-
-
-Game progress:
+Game progress / states:
 
   1. Start of the game
     (create players, assign them money & colors, choose first player, shuffle luck & finance cards, render)
@@ -130,6 +129,25 @@ Game progress:
   3. Player round ends
     a) check if he is eliminated
   4. Start round of next player
+
+
+Game events:
+
+  - beforeGameStart // initial rendering, memory cleanup...
+  init();
+  - afterGameStart // animation
+
+  - beforePlayerRound // get available options (bet?); change stuff in GameState
+
+      - beforePlayerBet // animation
+      - afterPlayerBet // animation
+
+      - beforePlayerDraw // animation
+      draw()
+      - afterPlayerDraw // animation
+
+
+  - afterPlayerRound
 
 
 
