@@ -1,5 +1,6 @@
 import React from 'react';
 import Bank from './bank/Bank';
+import GameMap from './map/GameMap';
 import CurrentPlayer from './player/CurrentPlayer';
 
 export default class App extends React.Component {
@@ -10,6 +11,7 @@ export default class App extends React.Component {
 
     render () {
         return <div>
+            <GameMap/>
             <Bank/>
             <CurrentPlayer/>
         </div>;

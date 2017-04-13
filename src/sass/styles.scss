@@ -50,17 +50,18 @@ body {
     display: inline-block;
     background: #ddd;
     text-align: center;
-    font-weight: bold;
-    padding-top: 10px;
+    padding: 10px 10px 0;
     margin: 15px;
     box-shadow: 1px 1px 4px 1px #aaa;
+    font-size: 12px;
+    float: left;
 
     &.field-start {
       background: indianred;
     }
 
-    &.field-finance,
-    &.field-luck {
+    &.field-finances,
+    &.field-fortune {
       background: lightgray;
     }
 
@@ -78,6 +79,15 @@ body {
     }
 
     &.field-horse {
+
+      .fee-section {
+        text-align: left;
+      }
+
+      hr {
+        margin: 1em;
+      }
+
       &.stable-1 {
         background: #cb3600;
       }
@@ -102,7 +112,6 @@ body {
       &.stable-8 {
         background: darkviolet;
       }
-
     }
   }
 }
