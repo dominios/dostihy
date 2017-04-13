@@ -16,7 +16,7 @@ const store = createStore(
 );
 
 import 'bootstrap/scss/bootstrap.scss';
-import './src/sass/styles.css';
+import './src/sass/styles.scss';
 
 ReactDOM.render((
     <Provider store={store}>

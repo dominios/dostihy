@@ -1,0 +1,74 @@
+$desk-size: 1200px;
+
+body {
+  background: #aaa;
+}
+
+.game-map {
+  width: $desk-size;
+  height: $desk-size;
+  background: white;
+
+  .field {
+    width: 110px;
+    height: 200px;
+    color: white;
+    display: inline-block;
+    background: #ddd;
+    text-align: center;
+    font-weight: bold;
+    padding-top: 10px;
+    margin: 15px;
+
+    &.field-start {
+      background: indianred;
+    }
+
+    &.field-finance,
+    &.field-luck {
+      background: lightgray;
+    }
+
+    &.field-distance,
+    &.field-doping {
+      background: #333;
+    }
+
+    &.field-trainer {
+      background: gold;
+    }
+    
+    &.field-parking {
+      background: royalblue;
+    }
+
+    &.field-horse {
+      &.stable-1 {
+        background: #cb3600;
+      }
+      &.stable-2 {
+        background: saddlebrown;
+      }
+      &.stable-3 {
+        background: lightblue;
+      }
+      &.stable-4 {
+        background: yellowgreen;
+      }
+      &.stable-5 {
+        background: hotpink;
+      }
+      &.stable-6 {
+        background: darkorange;
+      }
+      &.stable-7 {
+        background: darkgreen;
+      }
+      &.stable-8 {
+        background: darkviolet;
+      }
+
+    }
+  }
+}
+
