@@ -1,6 +1,7 @@
 import React from 'react';
 import Bank from './bank/Bank';
-import GameMap from './map/GameMap';
+import GameMap from './game/GameMap';
+import GameStatus from './game/GameStatus';
 import CurrentPlayer from './player/CurrentPlayer';
 
 export default class App extends React.Component {
@@ -11,9 +12,14 @@ export default class App extends React.Component {
 
     render () {
         return <div>
-            <GameMap/>
-            <Bank/>
-            <CurrentPlayer/>
+            <div className="main">
+                <GameMap/>
+            </div>
+            <div className="sidebar">
+                <GameStatus/>
+                <Bank/>
+                <CurrentPlayer/>
+            </div>
         </div>;
     }
 }

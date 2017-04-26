@@ -7,7 +7,7 @@ export default class Bank extends React.Component {
     }
 
     render () {
-        return (<div className="bank">
+        return (<div className="box-info bank">
             <h6>Bank</h6>
             Amount: <span>Infinite</span>
         </div>);

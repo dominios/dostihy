@@ -10,16 +10,41 @@ body {
   background: #aaa;
   box-shadow: 1px 1px 4px 1px #aaa;
   padding: 25px;
+  display: flex;
+  justify-content: space-between;
+
   > div {
     position: relative;
   }
+
+  .main {
+    width: 80%;
+    display: inline-block;
+    flex: 1;
+    vertical-align: top;
+  }
+
+  .sidebar {
+    width: calc(20% - 40px);
+    display: inline-block;
+    background: #ddd;
+    padding: 10px;
+    flex: 1;
+    vertical-align: top;
+
+    .box-info {
+      @include panel;
+      margin-bottom: 6px;
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+
+  }
+
 }
 
 .bank {
-  @include panel;
-  width: $sidebar-size;
-  position: absolute;
-  right: 0;
   span {
     font-weight: bold;
     font-style: italic;
@@ -27,11 +52,6 @@ body {
 }
 
 .currentPlayer {
-  @include panel;
-  width: $sidebar-size;
-  position: absolute;
-  top: 110px;
-  right: 0;
   span {
     font-weight: bold;
     font-style: italic;
