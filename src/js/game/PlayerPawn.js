@@ -19,10 +19,10 @@ export default class PlayerPawn extends React.Component {
 
     componentDidUpdate () {
         const target = $(`#field-${this.state.position + 1}`);
-        $(`#pawn-${this.props.index}`).animate({
+        $(`#pawn-${this.props.index}`).css({
             top: (target.position().top + 'px'),
             left: (target.position().left + 'px')
-        }, 500);
+        });
     }
 
     render () {
