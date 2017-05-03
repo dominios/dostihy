@@ -1,50 +1,64 @@
 import Immutable from 'immutable';
 import fields from './db/fields.json';
 import { THROW_DICE } from './actions';
+import { getRandomThrow } from '../utils/utils';
 
 const initialState = Immutable.fromJS({
     fields: fields,
     diceThrows: [0],
     round: 1,
-    playerOnTurn: 0
+    playerOnTurn: 0,
+    players: [
+        {
+            name: 'Dominik',
+            field: 0,
+            money: 30000,
+            ai: false,
+            color: 'red',
+            inventory: []
+        }
+    ]
 });
 
 const gameStateReducer = function (state = initialState, action) {
 
     switch (action.type) {
         case THROW_DICE: {
-            function getRandomThrow () {
-                const values = [1, 2, 3, 4, 5, 6];
-                function shuffle(array) {
-                    var currentIndex = array.length, temporaryValue, randomIndex;
 
-                    // While there remain elements to shuffle...
-                    while (0 !== currentIndex) {
+            let number1 = 0;
+            let number2 = 0;
 
-                        // Pick a remaining element...
-                        randomIndex = Math.floor(Math.random() * currentIndex);
-                        currentIndex -= 1;
-
-                        // And swap it with the current element.
-                        temporaryValue = array[currentIndex];
-                        array[currentIndex] = array[randomIndex];
-                        array[randomIndex] = temporaryValue;
-                    }
-
-                    return array;
-                }
-                return shuffle(shuffle(shuffle(shuffle(values))))[0];
-            }
+            // get throw results
             const throws = state.get('diceThrows').toJS();
-            const number = getRandomThrow();
-            console.info(`THROWING DICE: ${number}`);
-            throws.push(number);
-            if (number === 6) {
-                const number2 = getRandomThrow();
+            number1 = getRandomThrow();
+            console.info(`THROWING DICE: ${number1}`);
+            throws.push(number1);
+            if (number1 === 6) {
+                number2 = getRandomThrow();
                 console.info(`THROWING DICE AGAIN: ${number2}`);
                 throws.push(number2);
             }
-            return state.set('diceThrows', Immutable.fromJS(throws));
+
+            const currentPlayer = state.get('playerOnTurn');
+            const currentPosition = state.getIn(['players', currentPlayer, 'field']);
+            let newPosition;
+            if (number2 === 6) {
+                // 2 throws of 6 -> distance
+                newPosition = 10;
+            } else {
+                newPosition = currentPosition + number1 + number2;
+                if (newPosition > 40) {
+                    newPosition -= 40;
+                }
+            }
+
+            // update store
+            return state.withMutations(state => {
+                state
+                    .set('diceThrows', Immutable.fromJS(throws))
+                    .setIn(['players', currentPlayer, 'field'], newPosition)
+                ;
+            });
         }
     }
 

@@ -60,7 +60,7 @@ class GameMap extends React.Component {
         return <div className="game-map">
             { this.props.fields.map(this.renderField.bind(this))}
 
-            <PlayerPawn index={0} />
+            <PlayerPawn index={0} position={this.props.players.getIn([0, 'field'])} />
 
         </div>;
     }
@@ -72,7 +72,8 @@ GameMap.propTypes = {};
 
 const mapStateToProps = (state) => {
     return {
-        fields: state.get('fields')
+        fields: state.get('fields'),
+        players: state.get('players')
     }
 };
 
