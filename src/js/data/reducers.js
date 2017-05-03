@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 import fields from './db/fields.json';
-import { THROW_DICE } from './actions';
+import { THROW_DICE, BUY_CARD } from './actions';
 import { getRandomThrow } from '../utils/utils';
 
 const initialState = Immutable.fromJS({
@@ -23,6 +23,7 @@ const initialState = Immutable.fromJS({
 const gameStateReducer = function (state = initialState, action) {
 
     switch (action.type) {
+
         case THROW_DICE: {
 
             let number1 = 0;
@@ -57,6 +58,29 @@ const gameStateReducer = function (state = initialState, action) {
                 state
                     .set('diceThrows', Immutable.fromJS(throws))
                     .setIn(['players', currentPlayer, 'field'], newPosition)
+                ;
+            });
+        }
+
+        case BUY_CARD: {
+            // check if possible (ownership, money, ...)
+            // @todo
+            // assume it is
+            const fieldId = parseInt(action.fieldIndex, 10) - 1;
+            const currentPlayer = state.getIn(['players', action.playerIndex]);
+            const cardInfo = state.getIn(['fields', fieldId]);
+            let withdraw;
+            switch (cardInfo.get('type')) {
+                case 'HORSE': withdraw = cardInfo.getIn(['horse', 'initialPrice']); break;
+                case 'TRAINER': withdraw = 4000; break;
+            }
+            const newMoneyAmount = (currentPlayer.get('money') - withdraw);
+            return state.withMutations(state => {
+                const inventory = state.getIn(['players', action.playerIndex, 'inventory']).toJS();
+                inventory.push(fieldId);
+                state
+                    .setIn(['players', action.playerIndex, 'money'], newMoneyAmount)
+                    .setIn(['players', action.playerIndex, 'inventory'], Immutable.fromJS(inventory))
                 ;
             });
         }

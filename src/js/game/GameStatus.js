@@ -23,28 +23,35 @@ class GameStatus extends React.Component {
         }
     }
 
+    renderCurrentPlayer () {
+        return (
+            <section className="bold">
+                Player on Turn: <strong style={{color: this.props.currentPlayer.get('color')}}>{ this.props.currentPlayer.get('name') }</strong>
+            </section>
+        );
+    }
+
     render () {
 
         return (<div className="box-info gameStatus">
             <h6>Game Status</h6>
-            <section className="bold">Player on Turn: <span>N/A</span></section>
+            { this.renderCurrentPlayer() }
             <section className="bold">Last Throw: <span>{ this.renderThrows() }</span></section>
             <button onClick={this.handleThrowDiceClick}>Throw a dice</button>
         </div>);
     }
 }
 
-GameStatus.defaultProps = {
-};
+GameStatus.defaultProps = {};
 
-GameStatus.propTypes = {
-};
+GameStatus.propTypes = {};
 
 const mapStateToProps = function (state) {
     const throws = state.get('diceThrows');
     const last2 = throws.takeLast(2);
     return {
-        lastThrows: last2
+        lastThrows: last2,
+        currentPlayer: state.getIn(['players', state.get('playerOnTurn')])
     };
 };
 

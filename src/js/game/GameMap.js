@@ -25,9 +25,21 @@ class GameMap extends React.Component {
 
         const applicable = ['HORSE', 'TRAINER', 'STABLES', 'TRANSPORT'];
 
-        if (applicable.indexOf(field.get('type')) > -1) {
-            return <div className="ownership free">Free</div>;
+        if (applicable.indexOf(field.get('type')) === -1) {
+            return null;
         }
+
+        // search for owner
+        const players = this.props.players.toJS();
+        for (let i = 0; i < players.length; i++) {
+            const player = players[i];
+            const fieldId = parseInt(field.get('id'), 10) - 1;
+            if (player.inventory.indexOf(fieldId) !== -1) {
+                return <div className="ownership free" style={{color: player.color}}>{ player.name }</div>;
+            }
+        }
+
+        return <div className="ownership free">Free</div>;
     }
 
     renderField (field, index) {
