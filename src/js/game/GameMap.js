@@ -10,15 +10,14 @@ class GameMap extends React.Component {
     }
 
     render () {
-        return <div className="game-map">
+        return (<div className="game-map">
             {
                 this.props.fields.map(
                     (field, index) => <GameField key={index} field={field} players={this.props.players} />
                 )
             }
             <PlayerPawn index={0} position={this.props.players.getIn([0, 'field'])}/>
-
-        </div>;
+        </div>);
     }
 }
 

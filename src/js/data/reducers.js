@@ -17,7 +17,8 @@ const initialState = Immutable.fromJS({
             color: 'red',
             inventory: []
         }
-    ]
+    ],
+    log: ['The Game has started']
 });
 
 const gameStateReducer = function (state = initialState, action) {
@@ -48,13 +49,17 @@ const gameStateReducer = function (state = initialState, action) {
                 newPosition = 10;
             } else {
                 newPosition = currentPosition + number1 + number2;
-                if (newPosition > 40) {
+                if (newPosition >= 40) {
                     newPosition -= 40;
                 }
             }
 
             // update store
             return state.withMutations(state => {
+                state.set('log', state.get('log').push(`Player X  thrown ${number1}.`));
+                if (number2) {
+                    state.set('log', state.get('log').push(`Player X  thrown ${number2}.`));
+                }
                 state
                     .set('diceThrows', Immutable.fromJS(throws))
                     .setIn(['players', currentPlayer, 'field'], newPosition)
@@ -63,12 +68,17 @@ const gameStateReducer = function (state = initialState, action) {
         }
 
         case BUY_CARD: {
+
             // check if possible (ownership, money, ...)
             // @todo
+
             // assume it is
-            const fieldId = parseInt(action.fieldIndex, 10) - 1;
+            const fieldId = parseInt(action.fieldIndex, 10);
             const currentPlayer = state.getIn(['players', action.playerIndex]);
-            const cardInfo = state.getIn(['fields', fieldId]);
+            const cardInfo = state.get('fields').find(field => {
+                return parseInt(field.get('id'), 10) === fieldId;
+            });
+
             let withdraw;
             switch (cardInfo.get('type')) {
                 case 'HORSE': withdraw = cardInfo.getIn(['horse', 'initialPrice']); break;
@@ -76,11 +86,11 @@ const gameStateReducer = function (state = initialState, action) {
             }
             const newMoneyAmount = (currentPlayer.get('money') - withdraw);
             return state.withMutations(state => {
-                const inventory = state.getIn(['players', action.playerIndex, 'inventory']).toJS();
-                inventory.push(fieldId);
+                const inventory = state.getIn(['players', action.playerIndex, 'inventory']);
                 state
+                    .set('log', state.get('log').push(`Player X bought Y.`))
                     .setIn(['players', action.playerIndex, 'money'], newMoneyAmount)
-                    .setIn(['players', action.playerIndex, 'inventory'], Immutable.fromJS(inventory))
+                    .setIn(['players', action.playerIndex, 'inventory'], inventory.push(fieldId))
                 ;
             });
         }

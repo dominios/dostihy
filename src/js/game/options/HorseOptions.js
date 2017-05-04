@@ -15,8 +15,12 @@ class HorseOptions extends React.Component {
     }
 
     render () {
+
+        const buyBtn = <button onClick={this.onPurchase}>+ Kúpit</button>;
+        const isOwner = this.props.owner && this.props.owner.get('id') === this.props.currentPlayer.get('id');
+
         return (<div>
-            <button onClick={this.onPurchase}>+ Kúpit</button>
+            { isOwner ? '' : buyBtn }
         </div>);
     }
 }
@@ -24,7 +28,8 @@ class HorseOptions extends React.Component {
 HorseOptions.propTypes = {
     currentPlayer: React.PropTypes.object.isRequired,
     currentPlayerIndex: React.PropTypes.number.isRequired,
-    fieldId: React.PropTypes.string.isRequired
+    fieldId: React.PropTypes.string.isRequired,
+    owner: React.PropTypes.any
 };
 
 const mapDispatchToProps = function (dispatch) {

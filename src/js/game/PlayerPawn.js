@@ -27,7 +27,7 @@ export default class PlayerPawn extends React.Component {
 
     render () {
         return <div className="pawn" id={`pawn-${this.props.index}`}>
-            { `${this.state.position}` }
+            { `${this.props.index}` }
         </div> ;
     }
 }

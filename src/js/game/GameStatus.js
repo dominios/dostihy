@@ -23,6 +23,14 @@ class GameStatus extends React.Component {
         }
     }
 
+    renderLog () {
+        return (<div>
+            { this.props.log.map((message, index) => {
+                return <div key={index}>{message}</div>
+            })}
+        </div>)
+    }
+
     renderCurrentPlayer () {
         return (
             <section className="bold">
@@ -36,7 +44,8 @@ class GameStatus extends React.Component {
         return (<div className="box-info gameStatus">
             <h6>Game Status</h6>
             { this.renderCurrentPlayer() }
-            <section className="bold">Last Throw: <span>{ this.renderThrows() }</span></section>
+            { this.renderLog() }
+            {/*<section className="bold">Last Throw: <span>{ this.renderThrows() }</span></section>*/}
             <button onClick={this.handleThrowDiceClick}>Throw a dice</button>
         </div>);
     }
@@ -51,7 +60,8 @@ const mapStateToProps = function (state) {
     const last2 = throws.takeLast(2);
     return {
         lastThrows: last2,
-        currentPlayer: state.getIn(['players', state.get('playerOnTurn')])
+        currentPlayer: state.getIn(['players', state.get('playerOnTurn')]),
+        log: state.get('log').takeLast(3)
     };
 };
 

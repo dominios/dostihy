@@ -20,3 +20,11 @@ export function getRandomThrow () {
     }
     return shuffle(shuffle(shuffle(shuffle(values))))[0];
 }
+
+export function getOwner (field, players) {
+    return players.find((player) => {
+        return player.get('inventory').find(item => {
+            return item === parseInt(field.get('id'));
+        });
+    });
+}

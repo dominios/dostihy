@@ -19,7 +19,7 @@ export default class GameField extends React.Component {
         const players = this.props.players.toJS();
         for (let i = 0; i < players.length; i++) {
             const player = players[i];
-            const fieldId = parseInt(field.get('id'), 10) - 1;
+            const fieldId = parseInt(field.get('id'), 10);
             if (player.inventory.indexOf(fieldId) !== -1) {
                 return <div className="ownership free" style={{background: player.color}}>{ player.name }</div>;
             }
@@ -43,7 +43,7 @@ export default class GameField extends React.Component {
         >
             <div className="pawns-placeholder"></div>
             <div className="field-label">
-                { this.props.field.getIn(['text', 'name'])}
+                #{ this.props.field.get('id')} { this.props.field.getIn(['text', 'name'])}
             </div>
             <div className="content">
                 { content }
