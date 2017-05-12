@@ -4,9 +4,12 @@ import { connect } from 'react-redux';
 class PlayersInfo extends React.Component {
 
     renderInventory (player) {
-        const items = player.get('inventory').join(', ') || '';
+        const items = player.get('inventory').map(item => {
+            const field = this.props.fields.filter(field => item == field.get('id'));
+            return field.getIn([0, 'text', 'name']);
+        });
         return (<section className="inventory">
-            { items.length ? items : <i>Inventory Empty</i> }
+            Inventory: { items.size ? items.join(', ') : <i>empty</i> }
         </section>);
     }
 
@@ -37,6 +40,7 @@ const mapStateToProps = function (state) {
 
     return {
         players: state.get('players'),
+        fields: state.get('fields'),
         currentPlayer: currentPlayer,
         currentPlayerIndex: state.get('playerOnTurn')
     };

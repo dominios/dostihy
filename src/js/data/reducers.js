@@ -35,42 +35,42 @@ const initialState = Immutable.fromJS({
             color: 'deepskyblue',
             inventory: []
         },
-        {
-            index: 2,
-            name: 'Player 3',
-            field: 0,
-            money: 30000,
-            ai: false,
-            color: 'green',
-            inventory: []
-        },
-        {
-            index: 3,
-            name: 'Player 4',
-            field: 0,
-            money: 30000,
-            ai: false,
-            color: 'violet',
-            inventory: []
-        },
-        {
-            index: 3,
-            name: 'Player 5',
-            field: 0,
-            money: 30000,
-            ai: false,
-            color: 'white',
-            inventory: []
-        },
-        {
-            index: 3,
-            name: 'Player 6',
-            field: 0,
-            money: 30000,
-            ai: false,
-            color: 'black',
-            inventory: []
-        },
+        // {
+        //     index: 2,
+        //     name: 'Player 3',
+        //     field: 0,
+        //     money: 30000,
+        //     ai: false,
+        //     color: 'green',
+        //     inventory: []
+        // },
+        // {
+        //     index: 3,
+        //     name: 'Player 4',
+        //     field: 0,
+        //     money: 30000,
+        //     ai: false,
+        //     color: 'violet',
+        //     inventory: []
+        // },
+        // {
+        //     index: 3,
+        //     name: 'Player 5',
+        //     field: 0,
+        //     money: 30000,
+        //     ai: false,
+        //     color: 'white',
+        //     inventory: []
+        // },
+        // {
+        //     index: 3,
+        //     name: 'Player 6',
+        //     field: 0,
+        //     money: 30000,
+        //     ai: false,
+        //     color: 'black',
+        //     inventory: []
+        // },
     ],
     log: ['The Game has started']
 });
