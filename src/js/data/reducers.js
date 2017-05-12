@@ -46,11 +46,14 @@ const gameStateReducer = function (state = initialState, action) {
 
             const currentPlayer = state.getIn(['players', state.get('playerOnTurn')]);
             const currentPosition = currentPlayer.get('field');
+            let money = currentPlayer.get('money');
 
             let logs = [];
 
             let number1 = 0;
             let number2 = 0;
+
+            let change = 0;
 
             // get throw results
             const throws = state.get('diceThrows').toJS();
@@ -71,12 +74,13 @@ const gameStateReducer = function (state = initialState, action) {
                 newPosition = currentPosition + number1 + number2;
                 if (newPosition >= 40) {
                     newPosition -= 40;
+                    money += 4000;
+                    logs.push(`${currentPlayer.get('name')} gained $4.000 for crossing START.`);
                 }
             }
 
             // check for payments
             let payment = 0;
-            let money = currentPlayer.get('money');
             const owner = getOwner(state.getIn(['fields', newPosition]), state.get('players'));
             if (owner && owner.get('name') !== currentPlayer.get('name')) {
                 const field = state.getIn(['fields', newPosition]);
@@ -100,11 +104,11 @@ const gameStateReducer = function (state = initialState, action) {
                     .set('diceThrows', Immutable.fromJS(throws))
                     .setIn(['currentRound', 'state'], STATE_AFTER_THROW)
                     .setIn(['players', state.get('playerOnTurn'), 'field'], newPosition)
+                    .setIn(['players', state.get('playerOnTurn'), 'money'], money)
                 ;
                 // payment
                 if (payment) {
                     state
-                        .setIn(['players', state.get('playerOnTurn'), 'money'], money)
                         .setIn(['players', owner.get('index'), 'money'], owner.get('money') + payment)
                     ;
                 }
