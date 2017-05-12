@@ -45,11 +45,8 @@ class GameStatus extends React.Component {
     }
 
     render () {
-
         return (<div className="box-info game-status">
-            {/*{ this.renderCurrentPlayer() }*/}
-            {/*<section className="bold">Last Throw: <span>{ this.renderThrows() }</span></section>*/}
-            <button onClick={this.handleThrowDiceClick}>Throw a dice</button>
+            { this.props.currentRound.get('state') === 'STATE_BEFORE_THROW'  ? <button onClick={this.handleThrowDiceClick}>Throw a dice</button> : '' }
             <button onClick={this.handleEndTurn}>End turn</button>
             { this.renderLog() }
         </div>);
@@ -66,7 +63,8 @@ const mapStateToProps = function (state) {
     return {
         lastThrows: last2,
         currentPlayer: state.getIn(['players', state.get('playerOnTurn')]),
-        log: state.get('log').takeLast(3)
+        log: state.get('log').takeLast(3),
+        currentRound: state.get('currentRound')
     };
 };
 
