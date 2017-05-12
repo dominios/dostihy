@@ -16,7 +16,7 @@ class GameMap extends React.Component {
                     (field, index) => <GameField key={index} field={field} players={this.props.players} />
                 )
             }
-            <PlayerPawn index={0} position={this.props.players.getIn([0, 'field'])}/>
+            { this.props.players.map((player, index) => <PlayerPawn key={index} index={index} player={player}/>)}
         </div>);
     }
 }

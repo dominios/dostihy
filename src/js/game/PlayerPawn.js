@@ -7,13 +7,13 @@ export default class PlayerPawn extends React.Component {
         super(props);
 
         this.state = {
-            position: props.position
+            position: props.player.get('field')
         };
     }
 
     componentWillReceiveProps (nextProps) {
         this.setState({
-            position: nextProps.position
+            position: nextProps.player.get('field')
         });
     }
 
@@ -26,7 +26,7 @@ export default class PlayerPawn extends React.Component {
     }
 
     render () {
-        return <div className="pawn" id={`pawn-${this.props.index}`}>
+        return <div className="pawn" id={`pawn-${this.props.index}`} style={{background: this.props.player.get('color')}}>
             { `${this.props.index}` }
         </div> ;
     }
@@ -37,5 +37,5 @@ PlayerPawn.defaultProps = {
 
 PlayerPawn.propTypes = {
     index: React.PropTypes.number.isRequired,
-    position: React.PropTypes.number.isRequired
+    player: React.PropTypes.object.isRequired
 };

@@ -16,6 +16,14 @@ const initialState = Immutable.fromJS({
             ai: false,
             color: 'red',
             inventory: []
+        },
+        {
+            name: 'Player 2',
+            field: 0,
+            money: 30000,
+            ai: false,
+            color: 'lightblue',
+            inventory: []
         }
     ],
     log: ['The Game has started']
