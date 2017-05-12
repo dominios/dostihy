@@ -34,7 +34,43 @@ const initialState = Immutable.fromJS({
             ai: false,
             color: 'deepskyblue',
             inventory: []
-        }
+        },
+        {
+            index: 2,
+            name: 'Player 3',
+            field: 0,
+            money: 30000,
+            ai: false,
+            color: 'green',
+            inventory: []
+        },
+        {
+            index: 3,
+            name: 'Player 4',
+            field: 0,
+            money: 30000,
+            ai: false,
+            color: 'violet',
+            inventory: []
+        },
+        {
+            index: 3,
+            name: 'Player 5',
+            field: 0,
+            money: 30000,
+            ai: false,
+            color: 'white',
+            inventory: []
+        },
+        {
+            index: 3,
+            name: 'Player 6',
+            field: 0,
+            money: 30000,
+            ai: false,
+            color: 'black',
+            inventory: []
+        },
     ],
     log: ['The Game has started']
 });
@@ -85,7 +121,7 @@ const gameStateReducer = function (state = initialState, action) {
                 parkingMoney += 500;
                 logs.push(`${currentPlayer.get('name')} paid $500 for VET.`);
             }
-            if (newPosition === 39) {
+            if (newPosition === 38) {
                 money -= 1000;
                 parkingMoney += 1000;
                 logs.push(`${currentPlayer.get('name')} paid $1.000 for VET.`);

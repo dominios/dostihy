@@ -17,7 +17,7 @@ class PlayersInfo extends React.Component {
                 css.push('current');
             }
             return <div className={css.join(' ')} key={index}>
-                <h6 style={{color: player.get('color')}}>{ player.get('name') }</h6>
+                <span style={{color: player.get('color')}}>{ player.get('name') }</span>
                 <section className="amount">Money: <span>${ player.get('money') }</span></section>
                 { this.renderInventory(player) }
             </div>

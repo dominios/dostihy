@@ -34,7 +34,7 @@ class CurrentField extends React.Component {
     }
 
     render () {
-        return (<div className="box-info">
+        return (<div className="box-info current-field">
             <h1>
                 { this.props.currentField.getIn(['text', 'name']) }<br/>
                 <small>{ this.props.currentField.getIn(['text', 'description']) }</small>
