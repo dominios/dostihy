@@ -1,7 +1,7 @@
 import Immutable from 'immutable';
 import fields from './db/fields.json';
 import { THROW_DICE, BUY_CARD, END_TURN } from './actions';
-import { getRandomThrow } from '../utils/utils';
+import { getRandomThrow , getOwner } from '../utils/utils';
 
 const STATE_BEFORE_THROW = 'STATE_BEFORE_THROW';
 const STATE_AFTER_THROW = 'STATE_AFTER_THROW';
@@ -17,6 +17,7 @@ const initialState = Immutable.fromJS({
     playerOnTurn: 0,
     players: [
         {
+            index: 0,
             name: 'Dominik',
             field: 0,
             money: 30000,
@@ -25,6 +26,7 @@ const initialState = Immutable.fromJS({
             inventory: []
         },
         {
+            index: 1,
             name: 'Player 2',
             field: 0,
             money: 30000,
@@ -42,22 +44,25 @@ const gameStateReducer = function (state = initialState, action) {
 
         case THROW_DICE: {
 
+            const currentPlayer = state.getIn(['players', state.get('playerOnTurn')]);
+            const currentPosition = currentPlayer.get('field');
+
+            let logs = [];
+
             let number1 = 0;
             let number2 = 0;
 
             // get throw results
             const throws = state.get('diceThrows').toJS();
             number1 = getRandomThrow();
-            console.info(`THROWING DICE: ${number1}`);
             throws.push(number1);
+            logs.push(`${currentPlayer.get('name')} thrown ${number1}.`);
             if (number1 === 6) {
                 number2 = getRandomThrow();
-                console.info(`THROWING DICE AGAIN: ${number2}`);
                 throws.push(number2);
+                logs.push(`${currentPlayer.get('name')} thrown ${number2}.`);
             }
 
-            const currentPlayer = state.getIn(['players', state.get('playerOnTurn')]);
-            const currentPosition = currentPlayer.get('field');
             let newPosition;
             if (number2 === 6) {
                 // 2 throws of 6 -> distance
@@ -69,17 +74,44 @@ const gameStateReducer = function (state = initialState, action) {
                 }
             }
 
+            // check for payments
+            let payment = 0;
+            let money = currentPlayer.get('money');
+            const owner = getOwner(state.getIn(['fields', newPosition]), state.get('players'));
+            if (owner && owner.get('name') !== currentPlayer.get('name')) {
+                const field = state.getIn(['fields', newPosition]);
+                // count amount
+                switch (field.get('type')) {
+                    case 'HORSE':
+                        payment = field.getIn(['horse', 'standardFee']);
+                        break;
+                    default:
+                        console.warn(`TODO PAYMENT FOR FIELD TYPE ${field.get('type')}`);
+                        break;
+                }
+                money -= payment;
+                logs.push(`${currentPlayer.get('name')} payed ${payment} to ${owner.get('name')} for visiting ${field.getIn(['text', 'name'])}.`);
+            }
+
             // update store
             return state.withMutations(state => {
-                state.set('log', state.get('log').push(`${currentPlayer.get('name')} thrown ${number1}.`));
-                if (number2) {
-                    state.set('log', state.get('log').push(`${currentPlayer.get('name')} thrown ${number2}.`));
-                }
+                // movement
                 state
                     .set('diceThrows', Immutable.fromJS(throws))
                     .setIn(['currentRound', 'state'], STATE_AFTER_THROW)
                     .setIn(['players', state.get('playerOnTurn'), 'field'], newPosition)
                 ;
+                // payment
+                if (payment) {
+                    state
+                        .setIn(['players', state.get('playerOnTurn'), 'money'], money)
+                        .setIn(['players', owner.get('index'), 'money'], owner.get('money') + payment)
+                    ;
+                }
+                // logs
+                for (let i = 0; i < logs.length; i++) {
+                    state.set('log', state.get('log').push(logs[i]));
+                }
             });
         }
 
