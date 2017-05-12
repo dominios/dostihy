@@ -9,6 +9,7 @@ const STATE_AFTER_THROW = 'STATE_AFTER_THROW';
 const initialState = Immutable.fromJS({
     fields: fields,
     diceThrows: [0],
+    parkingMoney: 0,
     currentRound: {
         round: 1,
         player: 0,
@@ -47,6 +48,7 @@ const gameStateReducer = function (state = initialState, action) {
             const currentPlayer = state.getIn(['players', state.get('playerOnTurn')]);
             const currentPosition = currentPlayer.get('field');
             let money = currentPlayer.get('money');
+            let parkingMoney = state.get('parkingMoney');
 
             let logs = [];
 
@@ -77,7 +79,30 @@ const gameStateReducer = function (state = initialState, action) {
                 }
             }
 
-            // check for payments
+            // check for payment on the VET fields
+            if (newPosition === 4) {
+                money -= 500;
+                parkingMoney += 500;
+                logs.push(`${currentPlayer.get('name')} paid $500 for VET.`);
+            }
+            if (newPosition === 39) {
+                money -= 1000;
+                parkingMoney += 1000;
+                logs.push(`${currentPlayer.get('name')} paid $1.000 for VET.`);
+            }
+
+            // check parking income
+            if (newPosition === 20) {
+                if (parkingMoney) {
+                    money += parkingMoney;
+                    logs.push(`${currentPlayer.get('name')} gained $${parkingMoney} from parking.`);
+                    parkingMoney = 0;
+                } else {
+                    logs.push(`Parking is empty.`);
+                }
+            }
+
+            // check for payments between players
             let payment = 0;
             const owner = getOwner(state.getIn(['fields', newPosition]), state.get('players'));
             if (owner && owner.get('name') !== currentPlayer.get('name')) {
@@ -104,6 +129,7 @@ const gameStateReducer = function (state = initialState, action) {
                 // movement
                 state
                     .set('diceThrows', Immutable.fromJS(throws))
+                    .set('parkingMoney', parkingMoney)
                     .setIn(['currentRound', 'state'], STATE_AFTER_THROW)
                     .setIn(['players', state.get('playerOnTurn'), 'field'], newPosition)
                     .setIn(['players', state.get('playerOnTurn'), 'money'], money)

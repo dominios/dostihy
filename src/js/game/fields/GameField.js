@@ -1,5 +1,6 @@
 import React from 'react';
 import HorseField from './Horse';
+import ParkingField from './ParkingField';
 
 export default class GameField extends React.Component {
 
@@ -34,6 +35,7 @@ export default class GameField extends React.Component {
 
         switch (this.props.field.get('type')) {
             case 'HORSE': content = <HorseField horse={this.props.field.get('horse')}/>; break;
+            case 'PARKING': content = <ParkingField/>; break;
             default: break;
         }
 
