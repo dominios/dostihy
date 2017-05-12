@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { throwDice } from '../data/actions';
+import { throwDice, endTurn } from '../data/actions';
 
 class GameStatus extends React.Component {
 
@@ -8,10 +8,15 @@ class GameStatus extends React.Component {
         super(props);
 
         this.handleThrowDiceClick = this.handleThrowDiceClick.bind(this);
+        this.handleEndTurn = this.handleEndTurn.bind(this);
     }
 
     handleThrowDiceClick () {
         this.props.throwDice();
+    }
+
+    handleEndTurn () {
+        this.props.endTurn();
     }
 
     renderThrows () {
@@ -47,6 +52,7 @@ class GameStatus extends React.Component {
             { this.renderLog() }
             {/*<section className="bold">Last Throw: <span>{ this.renderThrows() }</span></section>*/}
             <button onClick={this.handleThrowDiceClick}>Throw a dice</button>
+            <button onClick={this.handleEndTurn}>End turn</button>
         </div>);
     }
 }
@@ -67,7 +73,8 @@ const mapStateToProps = function (state) {
 
 const mapDispatchToProps = function (dispatch) {
     return {
-        throwDice: () => dispatch(throwDice())
+        throwDice: () => dispatch(throwDice()),
+        endTurn: () => dispatch(endTurn())
     };
 };
 
