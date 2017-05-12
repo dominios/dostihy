@@ -53,8 +53,6 @@ const gameStateReducer = function (state = initialState, action) {
             let number1 = 0;
             let number2 = 0;
 
-            let change = 0;
-
             // get throw results
             const throws = state.get('diceThrows').toJS();
             number1 = getRandomThrow();
@@ -88,6 +86,10 @@ const gameStateReducer = function (state = initialState, action) {
                 switch (field.get('type')) {
                     case 'HORSE':
                         payment = field.getIn(['horse', 'standardFee']);
+                        break;
+                    case 'TRAINER':
+                        const ownerTrainers = owner.get('inventory').filter(item => [6, 16, 26, 36].indexOf(item) !== -1);
+                        payment = ownerTrainers.size * 1000;
                         break;
                     default:
                         console.warn(`TODO PAYMENT FOR FIELD TYPE ${field.get('type')}`);

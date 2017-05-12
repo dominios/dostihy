@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { buyCard } from '../../data/actions';
 
-class HorseOptions extends React.Component {
+class BuyOption extends React.Component {
 
     constructor (props) {
         super(props);
@@ -25,7 +25,7 @@ class HorseOptions extends React.Component {
     }
 }
 
-HorseOptions.propTypes = {
+BuyOption.propTypes = {
     currentPlayer: React.PropTypes.object.isRequired,
     currentPlayerIndex: React.PropTypes.number.isRequired,
     fieldId: React.PropTypes.string.isRequired,
@@ -38,4 +38,4 @@ const mapDispatchToProps = function (dispatch) {
     };
 };
 
-export default connect(undefined, mapDispatchToProps)(HorseOptions);
+export default connect(undefined, mapDispatchToProps)(BuyOption);

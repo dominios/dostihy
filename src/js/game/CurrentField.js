@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import HorseOptions from './options/HorseOptions';
+import BuyOption from './options/Buy';
 import { getOwner } from '../utils/utils';
 
 class CurrentField extends React.Component {
@@ -12,7 +12,8 @@ class CurrentField extends React.Component {
     renderOptions () {
         switch (this.props.currentField.get('type')) {
             case 'HORSE':
-                return <HorseOptions
+            case 'TRAINER':
+                return <BuyOption
                     currentPlayer={this.props.currentPlayer}
                     currentPlayerIndex={this.props.currentPlayerIndex}
                     fieldId={this.props.currentField.get('id')}
