@@ -29,7 +29,7 @@ class GameStatus extends React.Component {
     }
 
     renderLog () {
-        return (<div>
+        return (<div className="logs">
             { this.props.log.map((message, index) => {
                 return <div key={index}>{message}</div>
             })}
@@ -46,13 +46,12 @@ class GameStatus extends React.Component {
 
     render () {
 
-        return (<div className="box-info gameStatus">
-            <h6>Game Status</h6>
-            { this.renderCurrentPlayer() }
-            { this.renderLog() }
+        return (<div className="box-info game-status">
+            {/*{ this.renderCurrentPlayer() }*/}
             {/*<section className="bold">Last Throw: <span>{ this.renderThrows() }</span></section>*/}
             <button onClick={this.handleThrowDiceClick}>Throw a dice</button>
             <button onClick={this.handleEndTurn}>End turn</button>
+            { this.renderLog() }
         </div>);
     }
 }

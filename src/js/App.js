@@ -1,7 +1,7 @@
 import React from 'react';
 import GameMap from './game/GameMap';
 import GameStatus from './game/GameStatus';
-import CurrentPlayer from './player/CurrentPlayer';
+import PlayersInfo from './player/PlayersInfo';
 import CurrentField from './game/CurrentField';
 
 export default class App extends React.Component {
@@ -15,10 +15,10 @@ export default class App extends React.Component {
             <div className="main">
                 <GameMap/>
             </div>
-            <div className="sidebar">
-                <GameStatus/>
-                <CurrentPlayer/>
+            <div className="inside">
                 <CurrentField/>
+                <PlayersInfo/>
+                <GameStatus/>
             </div>
         </div>;
     }
