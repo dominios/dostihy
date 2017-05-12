@@ -426,6 +426,24 @@ body {
     height: 30px;
     background: red;
     z-index: 9999;
+    &#pawn-0 {
+      margin-left: 0;
+    }
+    &#pawn-1 {
+      margin-left: 10px;
+    }
+    &#pawn-2 {
+      margin-left: 20px;
+    }
+    &#pawn-3 {
+      margin-left: 30px;
+    }
+    &#pawn-4 {
+      margin-left: 40px;
+    }
+    &#pawn-5 {
+      margin-left: 50px;
+    }
   }
 
 }

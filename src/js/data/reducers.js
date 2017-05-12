@@ -56,8 +56,8 @@ const gameStateReducer = function (state = initialState, action) {
                 throws.push(number2);
             }
 
-            const currentPlayer = state.get('playerOnTurn');
-            const currentPosition = state.getIn(['players', currentPlayer, 'field']);
+            const currentPlayer = state.getIn(['players', state.get('playerOnTurn')]);
+            const currentPosition = currentPlayer.get('field');
             let newPosition;
             if (number2 === 6) {
                 // 2 throws of 6 -> distance
@@ -71,29 +71,32 @@ const gameStateReducer = function (state = initialState, action) {
 
             // update store
             return state.withMutations(state => {
-                state.set('log', state.get('log').push(`Player X  thrown ${number1}.`));
+                state.set('log', state.get('log').push(`${currentPlayer.get('name')} thrown ${number1}.`));
                 if (number2) {
-                    state.set('log', state.get('log').push(`Player X  thrown ${number2}.`));
+                    state.set('log', state.get('log').push(`${currentPlayer.get('name')} thrown ${number2}.`));
                 }
                 state
                     .set('diceThrows', Immutable.fromJS(throws))
                     .setIn(['currentRound', 'state'], STATE_AFTER_THROW)
-                    .setIn(['players', currentPlayer, 'field'], newPosition)
+                    .setIn(['players', state.get('playerOnTurn'), 'field'], newPosition)
                 ;
             });
         }
 
         case END_TURN: {
 
-            let nextPlayer = state.get('playerOnTurn') + 1;
-            if (nextPlayer >= state.get('players').size) {
-                nextPlayer = 0;
+            let nextPlayerIndex = state.get('playerOnTurn') + 1;
+            if (nextPlayerIndex >= state.get('players').size) {
+                nextPlayerIndex = 0;
             }
 
+            const nextPlayer = state.getIn(['players', nextPlayerIndex]);
+            
             return state.withMutations(state => {
                 state
                     .setIn(['currentRound', 'state'], STATE_BEFORE_THROW)
-                    .set('playerOnTurn', nextPlayer)
+                    .set('playerOnTurn', nextPlayerIndex)
+                    .set('log', state.get('log').push(`${nextPlayer.get('name')} round begins.`))
                 ;
             });
         }
@@ -123,7 +126,7 @@ const gameStateReducer = function (state = initialState, action) {
             return state.withMutations(state => {
                 const inventory = state.getIn(['players', action.playerIndex, 'inventory']);
                 state
-                    .set('log', state.get('log').push(`Player X bought Y.`))
+                    .set('log', state.get('log').push(`${currentPlayer.get('name')} bought ${cardInfo.getIn(['text', 'name'])} for ${withdraw}.`))
                     .setIn(['players', action.playerIndex, 'money'], newMoneyAmount)
                     .setIn(['players', action.playerIndex, 'inventory'], inventory.push(fieldId))
                 ;
