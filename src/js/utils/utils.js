@@ -1,4 +1,10 @@
 export function getRandomThrow () {
+
+    let result = prompt('Roll', 1);
+    if (result) {
+        return parseInt(result, 10);
+    }
+
     const values = [1, 2, 3, 4, 5, 6];
     function shuffle(array) {
         var currentIndex = array.length, temporaryValue, randomIndex;
