@@ -1,5 +1,5 @@
 import React from 'react';
-import HorseField from './Horse';
+import HorseField from './HorseField';
 import ParkingField from './ParkingField';
 
 export default class GameField extends React.Component {
