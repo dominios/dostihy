@@ -37,7 +37,7 @@ class CurrentField extends React.Component {
         return (<div className="box-info current-field">
             <h1>
                 { this.props.currentField.getIn(['text', 'name']) }<br/>
-                <small>{ this.props.currentField.getIn(['text', 'description']) }</small>
+                {/*<small>{ this.props.currentField.getIn(['text', 'description']) }</small>*/}
             </h1>
             { this.renderOwnership() }
             <section className="options">
