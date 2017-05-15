@@ -148,6 +148,25 @@ const gameStateReducer = function (state = initialState, action) {
                     reason: 'VET'
                 });
             }
+            const field = state.getIn(['fields', newPosition]);
+
+            if (field.get('type') === 'DISTANCE') {
+                console.warn('DISTANC TODO');
+            }
+
+            if (field.get('type') === 'DOPING') {
+                console.warn('DOPING TODO');
+            }
+
+            // random cards
+
+            if (field.get('type') === 'FINANCES') {
+                console.warn('FINANCES TODO');
+            }
+
+            if (field.get('type') === 'FORTUNE') {
+                console.warn('FORTUNE TODO');
+            }
 
             // check parking income
             if (newPosition === 20) {
@@ -170,7 +189,6 @@ const gameStateReducer = function (state = initialState, action) {
             let payment = 0;
             const owner = getOwner(state.getIn(['fields', newPosition]), state.get('players'));
             if (owner && owner.get('name') !== currentPlayer.get('name')) {
-                const field = state.getIn(['fields', newPosition]);
                 // count amount
                 switch (field.get('type')) {
                     case 'HORSE':
