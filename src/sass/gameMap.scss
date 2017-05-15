@@ -1,0 +1,109 @@
+.game-map {
+  position: relative;
+  .field {
+    position: absolute;
+    width: $field-width;
+    height: $field-height;
+    color: white;
+    background: #ddd;
+    text-align: center;
+    padding: 0;
+    border: 1px solid #eee;
+    font-size: 12px;
+    float: left;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .pawns-placeholder {
+      height: 30px;
+      background: #fafafa;
+      position: absolute;
+      width: 100%;
+      opacity: 0;
+      z-index: -1;
+    }
+
+    .ownership {
+      height: 18px;
+      color: #eeeeee;
+      transition: background 2s;
+      &.free {
+        background: #bbb;
+        font-style: italic;
+      }
+    }
+
+    &.field-start {
+      background: indianred;
+    }
+
+    &.field-finances,
+    &.field-fortune {
+      background: lightgray;
+    }
+
+    &.field-distance,
+    &.field-doping {
+      background: #333;
+    }
+
+    &.field-trainer {
+      background: #8da7c7;
+    }
+
+    &.field-parking {
+      background: royalblue;
+    }
+
+    &.field-horse {
+
+      background: #f2f2f2;
+      color: #333;
+
+      .field-label {
+        font-weight: bold;
+      }
+
+      .fee-section {
+        text-align: left;
+      }
+    }
+  }
+
+  .pawn {
+    top: 0;
+    left: 0;
+    position: absolute;
+    transition: top .6s, left .6s, bottom .6s, right .6s;
+    display: block;
+    width: 30px;
+    height: 30px;
+    background: red;
+    z-index: 9999;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 100%;
+
+    &#pawn-0 {
+      margin-left: 0;
+    }
+    &#pawn-1 {
+      margin-left: 10px;
+    }
+    &#pawn-2 {
+      margin-left: 20px;
+    }
+    &#pawn-3 {
+      margin-left: 30px;
+    }
+    &#pawn-4 {
+      margin-left: 40px;
+    }
+    &#pawn-5 {
+      margin-left: 50px;
+    }
+  }
+
+}
