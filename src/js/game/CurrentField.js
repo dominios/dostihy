@@ -1,28 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import BuyOption from './options/Buy';
 import { getOwner } from '../utils/utils';
 
 class CurrentField extends React.Component {
 
     constructor (props) {
         super(props);
-    }
-
-    renderOptions () {
-        switch (this.props.currentField.get('type')) {
-            case 'HORSE':
-            case 'TRAINER':
-                return <BuyOption
-                    currentPlayer={this.props.currentPlayer}
-                    currentPlayerIndex={this.props.currentPlayerIndex}
-                    fieldId={this.props.currentField.get('id')}
-                    owner={this.props.ownedBy}
-                />;
-            default:
-                return null;
-        }
-
     }
 
     renderOwnership () {
@@ -37,12 +20,8 @@ class CurrentField extends React.Component {
         return (<div className="box-info current-field">
             <h1>
                 { this.props.currentField.getIn(['text', 'name']) }<br/>
-                {/*<small>{ this.props.currentField.getIn(['text', 'description']) }</small>*/}
             </h1>
             { this.renderOwnership() }
-            <section className="options">
-                { this.renderOptions() }
-            </section>
         </div>);
     }
 }

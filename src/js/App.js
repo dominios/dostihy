@@ -3,6 +3,7 @@ import GameMap from './game/GameMap';
 import GameStatus from './game/GameStatus';
 import PlayersInfo from './player/PlayersInfo';
 import CurrentField from './game/CurrentField';
+import Toolbox from './interaction/Toolbox';
 
 export default class App extends React.Component {
 
@@ -16,6 +17,7 @@ export default class App extends React.Component {
                 <GameMap/>
             </div>
             <div className="inside">
+                <Toolbox/>
                 <CurrentField/>
                 <PlayersInfo/>
                 <GameStatus/>

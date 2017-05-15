@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { buyCard } from '../../data/actions';
 
-class BuyOption extends React.Component {
+class BuyButton extends React.Component {
 
     constructor (props) {
         super(props);
@@ -19,13 +19,15 @@ class BuyOption extends React.Component {
         const buyBtn = <button onClick={this.onPurchase}>+ Kúpit</button>;
         const isOwner = this.props.owner && this.props.owner.get('id') === this.props.currentPlayer.get('id');
 
-        return (<div>
-            { isOwner ? '' : buyBtn }
-        </div>);
+        if (!isOwner) {
+            return buyBtn;
+        }
+
+        return null;
     }
 }
 
-BuyOption.propTypes = {
+BuyButton.propTypes = {
     currentPlayer: React.PropTypes.object.isRequired,
     currentPlayerIndex: React.PropTypes.number.isRequired,
     fieldId: React.PropTypes.string.isRequired,
@@ -38,4 +40,4 @@ const mapDispatchToProps = function (dispatch) {
     };
 };
 
-export default connect(undefined, mapDispatchToProps)(BuyOption);
+export default connect(undefined, mapDispatchToProps)(BuyButton);
