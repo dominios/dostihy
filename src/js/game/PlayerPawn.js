@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import $ from 'jquery';
 
 export default class PlayerPawn extends React.Component {
@@ -32,10 +33,7 @@ export default class PlayerPawn extends React.Component {
     }
 }
 
-PlayerPawn.defaultProps = {
-};
-
 PlayerPawn.propTypes = {
-    index: React.PropTypes.number.isRequired,
-    player: React.PropTypes.object.isRequired
+    index: PropTypes.number.isRequired,
+    player: PropTypes.object.isRequired
 };

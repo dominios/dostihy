@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class MoneyInlineHelper extends React.Component {
 
@@ -16,6 +17,6 @@ export default class MoneyInlineHelper extends React.Component {
 }
 
 MoneyInlineHelper.propTypes = {
-    amount: React.PropTypes.number.isRequired,
-    label: React.PropTypes.string
+    amount: PropTypes.number.isRequired,
+    label: PropTypes.string
 };

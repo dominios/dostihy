@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class PlayerInlineHelper extends React.Component {
 
@@ -8,5 +9,5 @@ export default class PlayerInlineHelper extends React.Component {
 }
 
 PlayerInlineHelper.propTypes = {
-    player: React.PropTypes.object.isRequired
+    player: PropTypes.object.isRequired
 };

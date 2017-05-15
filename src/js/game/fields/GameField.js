@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import HorseField from './HorseField';
 import ParkingField from './ParkingField';
 
@@ -57,6 +58,6 @@ export default class GameField extends React.Component {
 }
 
 GameField.propTypes = {
-    field: React.PropTypes.object.isRequired,
-    players: React.PropTypes.object.isRequired
+    field: PropTypes.object.isRequired,
+    players: PropTypes.object.isRequired
 };

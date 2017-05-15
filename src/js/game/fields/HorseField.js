@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import MoneyInlineHelper from '../../utils/helpers/Money';
 
 export default class HorseField extends React.Component {
@@ -11,9 +12,6 @@ export default class HorseField extends React.Component {
     }
 }
 
-HorseField.defaultProps = {
-};
-
 HorseField.propTypes = {
-    horse: React.PropTypes.object.isRequired
+    horse: PropTypes.object.isRequired
 };

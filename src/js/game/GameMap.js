@@ -21,10 +21,6 @@ class GameMap extends React.Component {
     }
 }
 
-GameMap.defaultProps = {};
-
-GameMap.propTypes = {};
-
 const mapStateToProps = (state) => {
     return {
         fields: state.get('fields'),

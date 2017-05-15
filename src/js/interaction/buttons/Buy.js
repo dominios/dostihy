@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { buyCard } from '../../data/actions';
 
 class BuyButton extends React.Component {
@@ -28,10 +29,10 @@ class BuyButton extends React.Component {
 }
 
 BuyButton.propTypes = {
-    currentPlayer: React.PropTypes.object.isRequired,
-    currentPlayerIndex: React.PropTypes.number.isRequired,
-    fieldId: React.PropTypes.string.isRequired,
-    owner: React.PropTypes.any
+    currentPlayer: PropTypes.object.isRequired,
+    currentPlayerIndex: PropTypes.number.isRequired,
+    fieldId: PropTypes.string.isRequired,
+    owner: PropTypes.any
 };
 
 const mapDispatchToProps = function (dispatch) {
