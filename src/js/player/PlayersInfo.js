@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PlayerInlineHelper from '../utils/helpers/Player';
+import MoneyInlineHelper from '../utils/helpers/Money';
 
 class PlayersInfo extends React.Component {
 
@@ -20,8 +22,10 @@ class PlayersInfo extends React.Component {
                 css.push('current');
             }
             return <div className={css.join(' ')} key={index}>
-                <span style={{color: player.get('color')}}>{ player.get('name') }</span>
-                <section className="amount">Money: <span>${ player.get('money') }</span></section>
+                <PlayerInlineHelper player={player} />
+                <section className="amount">
+                    <MoneyInlineHelper amount={player.get('money')} />
+                </section>
                 { this.renderInventory(player) }
             </div>
         });

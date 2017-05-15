@@ -19,7 +19,7 @@ class BuyButton extends React.Component {
         const buyBtn = <button onClick={this.onPurchase}>+ Kúpit</button>;
         const isOwner = this.props.owner && this.props.owner.get('id') === this.props.currentPlayer.get('id');
 
-        if (!isOwner) {
+        if (!isOwner && this.props.currentPlayer.get('money')) {
             return buyBtn;
         }
 
