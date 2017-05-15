@@ -95,11 +95,20 @@ const gameStateReducer = function (state = initialState, action) {
             const throws = state.get('diceThrows').toJS();
             number1 = getRandomThrow();
             throws.push(number1);
-            logs.push(`${currentPlayer.get('name')} thrown ${number1}.`);
+            logs.push({
+                type: 'throw',
+                player: currentPlayer,
+                roll: number1
+            });
+
             if (number1 === 6) {
                 number2 = getRandomThrow();
                 throws.push(number2);
-                logs.push(`${currentPlayer.get('name')} thrown ${number2}.`);
+                logs.push({
+                    type: 'throw',
+                    player: currentPlayer,
+                    roll: number2
+                });
             }
 
             let newPosition;
@@ -111,7 +120,10 @@ const gameStateReducer = function (state = initialState, action) {
                 if (newPosition >= 40) {
                     newPosition -= 40;
                     money += 4000;
-                    logs.push(`${currentPlayer.get('name')} gained $4.000 for crossing START.`);
+                    logs.push({
+                        type: 'crossStart',
+                        player: currentPlayer
+                    });
                 }
             }
 
@@ -119,22 +131,38 @@ const gameStateReducer = function (state = initialState, action) {
             if (newPosition === 4) {
                 money -= 500;
                 parkingMoney += 500;
-                logs.push(`${currentPlayer.get('name')} paid $500 for VET.`);
+                logs.push({
+                    type: 'pay',
+                    player: currentPlayer,
+                    amount: 500,
+                    reason: 'VET'
+                });
             }
             if (newPosition === 38) {
                 money -= 1000;
                 parkingMoney += 1000;
-                logs.push(`${currentPlayer.get('name')} paid $1.000 for VET.`);
+                logs.push({
+                    type: 'pay',
+                    player: currentPlayer,
+                    amount: 1000,
+                    reason: 'VET'
+                });
             }
 
             // check parking income
             if (newPosition === 20) {
                 if (parkingMoney) {
                     money += parkingMoney;
-                    logs.push(`${currentPlayer.get('name')} gained $${parkingMoney} from parking.`);
+                    logs.push({
+                        type: 'parkingIncome',
+                        player: currentPlayer,
+                        amount: parkingMoney,
+                    });
                     parkingMoney = 0;
                 } else {
-                    logs.push(`Parking is empty.`);
+                    logs.push({
+                        type: 'parkingEmpty'
+                    });
                 }
             }
 
@@ -157,7 +185,13 @@ const gameStateReducer = function (state = initialState, action) {
                         break;
                 }
                 money -= payment;
-                logs.push(`${currentPlayer.get('name')} payed ${payment} to ${owner.get('name')} for visiting ${field.getIn(['text', 'name'])}.`);
+                logs.push({
+                    type: 'payVisit',
+                    who: currentPlayer,
+                    to: owner,
+                    amount: payment,
+                    what: field.getIn(['text', 'name'])
+                })
             }
 
             // update store
@@ -178,7 +212,7 @@ const gameStateReducer = function (state = initialState, action) {
                 }
                 // logs
                 for (let i = 0; i < logs.length; i++) {
-                    state.set('log', state.get('log').push(logs[i]));
+                    state.set('log', state.get('log').push(Immutable.fromJS(logs[i])));
                 }
             });
         }
@@ -191,12 +225,17 @@ const gameStateReducer = function (state = initialState, action) {
             }
 
             const nextPlayer = state.getIn(['players', nextPlayerIndex]);
-            
+
+            const log = {
+                type: 'turnStarted',
+                player: nextPlayer
+            };
+
             return state.withMutations(state => {
                 state
                     .setIn(['currentRound', 'state'], STATE_BEFORE_THROW)
                     .set('playerOnTurn', nextPlayerIndex)
-                    .set('log', state.get('log').push(`${nextPlayer.get('name')} round begins.`))
+                    .set('log', state.get('log').push(Immutable.fromJS(log)))
                 ;
             });
         }
@@ -223,10 +262,18 @@ const gameStateReducer = function (state = initialState, action) {
                     break;
             }
             const newMoneyAmount = (currentPlayer.get('money') - withdraw);
+
+            const log = {
+                type: 'buy',
+                player: currentPlayer,
+                what: cardInfo,
+                amount: withdraw
+            };
+
             return state.withMutations(state => {
                 const inventory = state.getIn(['players', action.playerIndex, 'inventory']);
                 state
-                    .set('log', state.get('log').push(`${currentPlayer.get('name')} bought ${cardInfo.getIn(['text', 'name'])} for ${withdraw}.`))
+                    .set('log', state.get('log').push(Immutable.fromJS(log)))
                     .setIn(['players', action.playerIndex, 'money'], newMoneyAmount)
                     .setIn(['players', action.playerIndex, 'inventory'], inventory.push(fieldId))
                 ;
