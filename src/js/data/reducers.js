@@ -180,6 +180,15 @@ const gameStateReducer = function (state = initialState, action) {
                         const ownerTrainers = owner.get('inventory').filter(item => [6, 16, 26, 36].indexOf(item) !== -1);
                         payment = ownerTrainers.size * 1000;
                         break;
+                    case 'TRANSPORT':
+                    case 'STABLES':
+                        const ownerCards = owner.get('inventory').filter(item => [13, 29].indexOf(item) !== -1);
+                        if (ownerCards.size === 1) {
+                            payment = ((number1 + number2) * 80);
+                        } else if (ownerCards.size === 2) {
+                            payment = ((number1 + number2) * 200);
+                        }
+                        break;
                     default:
                         console.warn(`TODO PAYMENT FOR FIELD TYPE ${field.get('type')}`);
                         break;
@@ -259,6 +268,10 @@ const gameStateReducer = function (state = initialState, action) {
                     break;
                 case 'TRAINER':
                     withdraw = 4000;
+                    break;
+                case 'TRANSPORT':
+                case 'STABLES':
+                    withdraw = 3000;
                     break;
             }
             const newMoneyAmount = (currentPlayer.get('money') - withdraw);

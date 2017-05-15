@@ -8,7 +8,7 @@ import EndTurnButton from './buttons/EndTurn';
 class Toolbox extends React.Component {
 
     renderBuy () {
-        const allowed = ['HORSE', 'TRAINER'];
+        const allowed = ['HORSE', 'TRAINER', 'TRANSPORT', 'STABLES'];
         const isAfterThrow = this.props.currentRound.get('state') === 'STATE_AFTER_THROW';
         if (isAfterThrow && allowed.indexOf(this.props.currentField.get('type')) !== -1) {
             return <BuyButton
