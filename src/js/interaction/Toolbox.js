@@ -9,7 +9,8 @@ class Toolbox extends React.Component {
 
     renderBuy () {
         const allowed = ['HORSE', 'TRAINER'];
-        if (allowed.indexOf(this.props.currentField.get('type')) !== -1) {
+        const isAfterThrow = this.props.currentRound.get('state') === 'STATE_AFTER_THROW';
+        if (isAfterThrow && allowed.indexOf(this.props.currentField.get('type')) !== -1) {
             return <BuyButton
                 currentPlayer={this.props.currentPlayer}
                 currentPlayerIndex={this.props.currentPlayerIndex}
@@ -26,7 +27,10 @@ class Toolbox extends React.Component {
     }
 
     renderEndTurn () {
-        return <EndTurnButton/>;
+        const isAfterThrow = this.props.currentRound.get('state') === 'STATE_AFTER_THROW';
+        if (isAfterThrow) {
+            return <EndTurnButton/>;
+        }
     }
 
     render () {
