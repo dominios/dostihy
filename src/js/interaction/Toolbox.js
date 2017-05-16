@@ -5,7 +5,7 @@ import BuyButton from './buttons/Buy';
 import PayButton from './buttons/Pay';
 import ThrowDiceButton from './buttons/ThrowDice';
 import EndTurnButton from './buttons/EndTurn';
-import { STATE_AFTER_THROW, STATE_AFTER_PAYMENT, PAY_BANK, PAY_PLAYER, payBank, payPlayer } from '../data/actions';
+import { STATE_AFTER_THROW, STATE_AFTER_PAYMENT, PAY_BANK, PAY_PLAYER } from '../data/actions';
 
 class Toolbox extends React.Component {
 
@@ -13,9 +13,7 @@ class Toolbox extends React.Component {
         const actionRequired = this.props.currentRound.get('actionRequired');
         if (actionRequired) {
             if (actionRequired.get('type') === PAY_BANK) {
-                return <PayButton amount={actionRequired.get('amount')} recipient="BANK" action={actionRequired.toJS(
-
-                )} />;
+                return <PayButton amount={actionRequired.get('amount')} recipient="BANK" action={actionRequired.toJS()} />;
             }
         }
     }
