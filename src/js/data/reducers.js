@@ -192,7 +192,18 @@ const gameStateReducer = function (state = initialState, action) {
             }
 
             const field = state.getIn(['fields', newPosition]);
-            const actionRequired = resolveActionRequired(state, currentPlayer, field);
+            let actionRequired = resolveActionRequired(state, currentPlayer, field);
+
+            if (actionRequired.type === 'INCOME_PARKING') {
+                money += actionRequired.amount;
+                parkingMoney = 0;
+                logs.push({
+                    type: 'parkingIncome',
+                    player: state.getIn(['players', state.get('playerOnTurn')]),
+                    amount: actionRequired.amount
+                });
+                actionRequired = null;
+            }
 
             return state.withMutations(state => {
                 // movement
@@ -202,6 +213,7 @@ const gameStateReducer = function (state = initialState, action) {
                     .setIn(['currentRound', 'actionRequired'], actionRequired ? Immutable.fromJS(actionRequired) : null)
                     .setIn(['players', state.get('playerOnTurn'), 'field'], newPosition)
                     .setIn(['players', state.get('playerOnTurn'), 'money'], money)
+                    .set('parkingMoney', 0)
                 ;
 
                 // write logs
