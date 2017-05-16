@@ -161,7 +161,7 @@ const gameStateReducer = function (state = initialState, action) {
             }
 
             let newPosition;
-            if (currentPosition === 10) {
+            if (currentPosition === 10 && distancRounds > 0) {
                 // DISTANCE
                 if (number1 !== 6) {
                     newPosition = currentPosition;
@@ -198,6 +198,7 @@ const gameStateReducer = function (state = initialState, action) {
 
             if (newPosition === 10 && currentPlayer.get('field') !== 10) {
                 logs.push(`DISTANCE!`);
+                distancRounds = 3;
             }
 
             if (newPosition >= 40) {
