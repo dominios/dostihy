@@ -124,9 +124,22 @@ const gameStateReducer = function (state = initialState, action) {
             const currentPosition = currentPlayer.get('field');
             let money = currentPlayer.get('money');
             let parkingMoney = state.get('parkingMoney');
+            let distancRounds = currentPlayer.get('distancRounds') || 0;
             let logs = [];
             let number1 = 0;
             let number2 = 0;
+            let number3 = 0;
+
+            // possibilities:
+            // DISTANCE
+            //      x   ->  -
+            //      6   ->  x   ->  x
+            //      6   ->  6   ->  x   ->  6 + x
+            //      6   ->  6   ->  6   ->  D
+            //  NO DISTANCE
+            //      x   ->  x
+            //      6   ->  x   ->  6 + x
+            //      6   ->  6   ->  D
 
             // get throw results
             const throws = state.get('diceThrows').toJS();
@@ -147,22 +160,71 @@ const gameStateReducer = function (state = initialState, action) {
                 });
             }
 
-            // calculate new position
             let newPosition;
-            if (number2 === 6) {
-                // 2 throws of 6 -> distance
-                newPosition = 10;
+            if (currentPosition === 10) {
+                // DISTANCE
+                if (number1 !== 6) {
+                    newPosition = currentPosition;
+                    distancRounds--;
+                    logs.push(`Stopped for next ${distancRounds} rounds.`);
+                } else {
+                    logs.push(`Distance cleared!`);
+                    if (number2 === 6) {
+                        number3 = getRandomThrow();
+                        logs.push({
+                            type: 'throw',
+                            player: currentPlayer,
+                            roll: number3
+                        });
+                        if (number3 === 6) {
+                            newPosition = currentPosition;
+                            distancRounds = 3;
+                            logs.push(`DISTANCE!`);
+                        } else {
+                            newPosition = currentPosition + number2 + number3;
+                        }
+                    } else {
+                        newPosition = currentPosition + number2;
+                    }
+                }
             } else {
-                newPosition = currentPosition + number1 + number2;
-                if (newPosition >= 40) {
-                    newPosition -= 40;
-                    money += 4000;
-                    logs.push({
-                        type: 'crossStart',
-                        player: currentPlayer
-                    });
+                if (number1 === 6 && number2 === 6) {
+                    newPosition = 10;
+                    distancRounds = 3;
+                } else {
+                    newPosition = currentPosition + number1 + number2;
                 }
             }
+
+            if (newPosition === 10 && currentPlayer.get('field') !== 10) {
+                logs.push(`DISTANCE!`);
+            }
+
+            if (newPosition >= 40) {
+                newPosition -= 40;
+                money += 4000;
+                logs.push({
+                    type: 'crossStart',
+                    player: currentPlayer
+                });
+            }
+
+            // calculate new position
+
+            // if (number2 === 6) {
+            //     // 2 throws of 6 -> distance
+            //     newPosition = 10;
+            // } else {
+            //     newPosition = currentPosition + number1 + number2;
+            //     if (newPosition >= 40) {
+            //         newPosition -= 40;
+            //         money += 4000;
+            //         logs.push({
+            //             type: 'crossStart',
+            //             player: currentPlayer
+            //         });
+            //     }
+            // }
 
             const field = state.getIn(['fields', newPosition]);
             let actionRequired = resolveActionRequired(state, currentPlayer, field);
@@ -188,12 +250,6 @@ const gameStateReducer = function (state = initialState, action) {
                 // @todo
             }
 
-            if (field.get('type') === 'DISTANCE') {
-                return {
-                    type: 'DISTANCE'
-                };
-            }
-
             if (field.get('type') === 'DOPING') {
                 console.warn('DOPING TODO');
                 // @todo
@@ -207,6 +263,7 @@ const gameStateReducer = function (state = initialState, action) {
                     .setIn(['currentRound', 'actionRequired'], actionRequired ? Immutable.fromJS(actionRequired) : null)
                     .setIn(['players', state.get('playerOnTurn'), 'field'], newPosition)
                     .setIn(['players', state.get('playerOnTurn'), 'money'], money)
+                    .setIn(['players', state.get('playerOnTurn'), 'distancRounds'], distancRounds)
                     .set('parkingMoney', 0)
                 ;
 
