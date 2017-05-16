@@ -112,33 +112,6 @@ function resolveActionRequired (state, player, field) {
         }
     }
 
-    if (field.get('type') === 'PARKING') {
-        return {
-            type: 'INCOME_PARKING',
-            amount: state.get('parkingMoney')
-        }
-    }
-
-    if (field.get('type') === 'FINANCES') {
-        console.warn('FINANCES TODO');
-        // @todo
-    }
-
-    if (field.get('type') === 'FORTUNE') {
-        console.warn('FORTUNE TODO');
-        // @todo
-    }
-
-    if (field.get('type') === 'DISTANCE') {
-        console.warn('DISTANC TODO');
-        // @todo
-    }
-
-    if (field.get('type') === 'DOPING') {
-        console.warn('DOPING TODO');
-        // @todo
-    }
-
 }
 
 const gameStateReducer = function (state = initialState, action) {
@@ -194,15 +167,36 @@ const gameStateReducer = function (state = initialState, action) {
             const field = state.getIn(['fields', newPosition]);
             let actionRequired = resolveActionRequired(state, currentPlayer, field);
 
-            if (actionRequired.type === 'INCOME_PARKING') {
-                money += actionRequired.amount;
-                parkingMoney = 0;
+
+            if (field.get('type') === 'PARKING') {
+                money += parkingMoney;
                 logs.push({
                     type: 'parkingIncome',
                     player: state.getIn(['players', state.get('playerOnTurn')]),
-                    amount: actionRequired.amount
+                    amount: parkingMoney
                 });
-                actionRequired = null;
+                parkingMoney = 0;
+            }
+
+            if (field.get('type') === 'FINANCES') {
+                console.warn('FINANCES TODO');
+                // @todo
+            }
+
+            if (field.get('type') === 'FORTUNE') {
+                console.warn('FORTUNE TODO');
+                // @todo
+            }
+
+            if (field.get('type') === 'DISTANCE') {
+                return {
+                    type: 'DISTANCE'
+                };
+            }
+
+            if (field.get('type') === 'DOPING') {
+                console.warn('DOPING TODO');
+                // @todo
             }
 
             return state.withMutations(state => {
