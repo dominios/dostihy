@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import MoneyInlineHelper from '../../utils/helpers/Money';
 
 class ParkingField extends React.Component {
 
     render () {
         return <div>
-            { this.props.parkingMoney }
+            <MoneyInlineHelper amount={ this.props.parkingMoney } />
         </div>;
     }
 }
