@@ -1,3 +1,7 @@
+/**
+ * Generates random dice roll.
+ * @return {Number}
+ */
 export function getRandomThrow () {
 
     let result = prompt('Roll', 1);
@@ -27,6 +31,12 @@ export function getRandomThrow () {
     return shuffle(shuffle(shuffle(shuffle(values))))[0];
 }
 
+/**
+ * Returns owner of the field.
+ * @param {Object} field
+ * @param {Array} players
+ * @return {Object}
+ */
 export function getOwner (field, players) {
     return players.find((player) => {
         return player.get('inventory').find(item => {

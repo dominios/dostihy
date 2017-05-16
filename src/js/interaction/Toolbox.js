@@ -2,10 +2,23 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getOwner } from '../utils/utils';
 import BuyButton from './buttons/Buy';
+import PayButton from './buttons/Pay';
 import ThrowDiceButton from './buttons/ThrowDice';
 import EndTurnButton from './buttons/EndTurn';
+import { STATE_AFTER_THROW, STATE_AFTER_PAYMENT, PAY_BANK, PAY_PLAYER, payBank, payPlayer } from '../data/actions';
 
 class Toolbox extends React.Component {
+
+    renderPay () {
+        const actionRequired = this.props.currentRound.get('actionRequired');
+        if (actionRequired) {
+            if (actionRequired.get('type') === PAY_BANK) {
+                return <PayButton amount={actionRequired.get('amount')} recipient="BANK" action={actionRequired.toJS(
+
+                )} />;
+            }
+        }
+    }
 
     renderBuy () {
         const allowed = ['HORSE', 'TRAINER', 'TRANSPORT', 'STABLES'];
@@ -27,8 +40,9 @@ class Toolbox extends React.Component {
     }
 
     renderEndTurn () {
-        const isAfterThrow = this.props.currentRound.get('state') === 'STATE_AFTER_THROW';
-        if (isAfterThrow) {
+        const statesAfterThrow = [STATE_AFTER_THROW, STATE_AFTER_PAYMENT];
+        const isAfterThrow = statesAfterThrow.indexOf(this.props.currentRound.get('state')) !== -1;
+        if (!this.props.currentRound.get('actionRequired') && isAfterThrow) {
             return <EndTurnButton/>;
         }
     }
@@ -36,6 +50,7 @@ class Toolbox extends React.Component {
     render () {
         return <div className="interaction-container">
             { this.renderBuy() }
+            { this.renderPay() }
             { this.renderThrowDice() }
             { this.renderEndTurn() }
         </div>;

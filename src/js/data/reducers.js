@@ -1,10 +1,19 @@
 import Immutable from 'immutable';
 import fields from './db/fields.json';
-import { THROW_DICE, BUY_CARD, END_TURN } from './actions';
-import { getRandomThrow , getOwner } from '../utils/utils';
-
-const STATE_BEFORE_THROW = 'STATE_BEFORE_THROW';
-const STATE_AFTER_THROW = 'STATE_AFTER_THROW';
+import {
+    STATE_BEFORE_THROW,
+    STATE_AFTER_THROW,
+    STATE_BEFORE_PAYMENT,
+    STATE_AFTER_PAYMENT,
+    THROW_DICE,
+    PAY_PLAYER,
+    PAY_BANK,
+    BUY_CARD,
+    END_TURN,
+    payBank,
+    payPlayer
+} from './actions';
+import { getRandomThrow, getOwner } from '../utils/utils';
 
 const initialState = Immutable.fromJS({
     fields: fields,
@@ -13,7 +22,8 @@ const initialState = Immutable.fromJS({
     currentRound: {
         round: 1,
         player: 0,
-        state: STATE_BEFORE_THROW
+        state: STATE_BEFORE_THROW,
+        actionRequired: null
     },
     playerOnTurn: 0,
     players: [
@@ -127,6 +137,107 @@ const gameStateReducer = function (state = initialState, action) {
                 }
             }
 
+            const field = state.getIn(['fields', newPosition]);
+
+            function countPayAmount (field, player) {
+
+                if (field.get('type') === 'HORSE') {
+                    return field.getIn(['horse', 'standardFee']);
+                    // @todo racing points already assigned?
+                }
+
+                if (field.get('type') === 'TRAINER') {
+                    const trainersCount = player.get('inventory').filter(item => [6, 16, 26, 36].indexOf(item) !== -1);
+                    return trainersCount.size * 1000;
+                }
+
+                if (field.get('type') === 'TRANSPORT' || field.get('type') === 'STABLES') {
+                    const ownerCards = player.get('inventory').filter(item => [13, 29].indexOf(item) !== -1);
+                    if (ownerCards.size === 1) {
+                        return ((number1 + number2) * 80);
+                    } else if (ownerCards.size === 2) {
+                        return ((number1 + number2) * 200);
+                    }
+                }
+
+                console.warn('UNSUPPORTED FIELD TYPE: ', field.get('type'));
+            }
+
+            function resolveActionRequired (state, player, field) {
+
+                const claimable = ['HORSE', 'TRAINER', 'STABLES', 'TRANSPORT'];
+                if (claimable.indexOf(field.get('type')) !== -1) {
+                    const owner = getOwner(field, state.get('players'));
+                    if (owner && owner.get('index') !== player.get('index')) {
+                        return payPlayer(countPayAmount(field), player, owner, field);
+                    }
+                }
+
+                if (field.get('type') === 'VET') {
+                    if (field.get('id') == 5) {
+                        return payBank(500, player, field);
+                    }
+                    if (field.get('id') == 39) {
+                        return payBank(1000, player, field);
+                    }
+                }
+
+                if (field.get('type') === 'PARKING') {
+                    return {
+                        type: 'INCOME_PARKING',
+                        amount: state.get('parkingMoney')
+                    }
+                }
+
+                if (field.get('type') === 'FINANCES') {
+                    console.warn('FINANCES TODO');
+                    // @todo
+                }
+
+                if (field.get('type') === 'FORTUNE') {
+                    console.warn('FORTUNE TODO');
+                    // @todo
+                }
+
+                if (field.get('type') === 'DISTANCE') {
+                    console.warn('DISTANC TODO');
+                    // @todo
+                }
+
+                if (field.get('type') === 'DOPING') {
+                    console.warn('DOPING TODO');
+                    // @todo
+                }
+
+            }
+
+            const actionRequired = resolveActionRequired(state, currentPlayer, field);
+            if (actionRequired) {
+                console.info("");
+                console.info("ACTION REQUIRED:");
+                console.info(actionRequired);
+                console.info("");
+            }
+
+            return state.withMutations(state => {
+                // movement
+                state
+                    .set('diceThrows', Immutable.fromJS(throws))
+                    .setIn(['currentRound', 'state'], STATE_AFTER_THROW)
+                    .setIn(['currentRound', 'actionRequired'], actionRequired ? Immutable.fromJS(actionRequired) : null)
+                    .setIn(['players', state.get('playerOnTurn'), 'field'], newPosition)
+                    .setIn(['players', state.get('playerOnTurn'), 'money'], money)
+                ;
+
+                // write logs
+                for (let i = 0; i < logs.length; i++) {
+                    state.set('log', state.get('log').push(Immutable.fromJS(logs[i])));
+                }
+            });
+
+            // ALL LOGIC BELOW NEEDS SEPARATE ACTIONS !
+            // @deprecated below
+
             // check for payment on the VET fields
             if (newPosition === 4) {
                 money -= 500;
@@ -148,26 +259,6 @@ const gameStateReducer = function (state = initialState, action) {
                     reason: 'VET'
                 });
             }
-            const field = state.getIn(['fields', newPosition]);
-
-            if (field.get('type') === 'DISTANCE') {
-                console.warn('DISTANC TODO');
-            }
-
-            if (field.get('type') === 'DOPING') {
-                console.warn('DOPING TODO');
-            }
-
-            // random cards
-
-            if (field.get('type') === 'FINANCES') {
-                console.warn('FINANCES TODO');
-            }
-
-            if (field.get('type') === 'FORTUNE') {
-                console.warn('FORTUNE TODO');
-            }
-
             // check parking income
             if (newPosition === 20) {
                 if (parkingMoney) {
@@ -244,6 +335,25 @@ const gameStateReducer = function (state = initialState, action) {
             });
         }
 
+        case PAY_BANK: {
+            return state.withMutations(state => {
+                const player = state.getIn(['players', action.from.index]);
+                const log = Immutable.fromJS({
+                    type: 'pay',
+                    player: player,
+                    amount: 500,
+                    reason: 'VET'
+                });
+                state
+                    .set('parkingMoney', state.get('parkingMoney') + action.amount)
+                    .setIn(['currentRound', 'state'], STATE_AFTER_PAYMENT)
+                    .setIn(['currentRound', 'actionRequired'], null)
+                    .setIn(['players', player.get('index'), 'money'], (player.get('money') - action.amount))
+                    .set('log', state.get('log').push(log))
+                ;
+            });
+        }
+
         case END_TURN: {
 
             let nextPlayerIndex = state.get('playerOnTurn') + 1;
@@ -261,6 +371,7 @@ const gameStateReducer = function (state = initialState, action) {
             return state.withMutations(state => {
                 state
                     .setIn(['currentRound', 'state'], STATE_BEFORE_THROW)
+                    .setIn(['currentRound', 'actionRequired'], null)
                     .set('playerOnTurn', nextPlayerIndex)
                     .set('log', state.get('log').push(Immutable.fromJS(log)))
                 ;

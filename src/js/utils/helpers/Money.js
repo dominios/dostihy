@@ -3,15 +3,20 @@ import PropTypes from 'prop-types';
 
 export default class MoneyInlineHelper extends React.Component {
 
-    render () {
+    static formatMoney (amount) {
         const formatter = new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
             minimumFractionDigits: 0,
         });
+        return formatter.format(amount);
+    }
+
+    render () {
+
         return <span className="inline-money">
             <span className="label">{this.props.label ? this.props.label + ': ' : ''}</span>
-            <span className="amount">{ formatter.format(this.props.amount) }</span>
+            <span className="amount">{ MoneyInlineHelper.formatMoney(this.props.amount) }</span>
         </span>;
     }
 }
