@@ -15,6 +15,9 @@ class Toolbox extends React.Component {
             if (actionRequired.get('type') === PAY_BANK) {
                 return <PayButton amount={actionRequired.get('amount')} recipient="BANK" action={actionRequired.toJS()} />;
             }
+            if (actionRequired.get('type') === PAY_PLAYER) {
+                return <PayButton amount={actionRequired.get('amount')} recipient={actionRequired.getIn(['to', 'name'])} action={actionRequired.toJS()} />;
+            }
         }
     }
 

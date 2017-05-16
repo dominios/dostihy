@@ -341,7 +341,7 @@ const gameStateReducer = function (state = initialState, action) {
                 const log = Immutable.fromJS({
                     type: 'pay',
                     player: player,
-                    amount: 500,
+                    amount: action.amount,
                     reason: 'VET'
                 });
                 state
@@ -349,6 +349,27 @@ const gameStateReducer = function (state = initialState, action) {
                     .setIn(['currentRound', 'state'], STATE_AFTER_PAYMENT)
                     .setIn(['currentRound', 'actionRequired'], null)
                     .setIn(['players', player.get('index'), 'money'], (player.get('money') - action.amount))
+                    .set('log', state.get('log').push(log))
+                ;
+            });
+        }
+
+        case PAY_PLAYER: {
+            return state.withMutations(state => {
+                const from = state.getIn(['players', action.from.index]);
+                const to = state.getIn(['players', action.to.index]);
+                const log = Immutable.fromJS({
+                    type: 'payVisit',
+                    who: from,
+                    to: to,
+                    what: '@TODO',
+                    amount: action.amount
+                });
+                state
+                    .setIn(['currentRound', 'state'], STATE_AFTER_PAYMENT)
+                    .setIn(['currentRound', 'actionRequired'], null)
+                    .setIn(['players', from.get('index'), 'money'], (from.get('money') - action.amount))
+                    .setIn(['players', to.get('index'), 'money'], (to.get('money') + action.amount))
                     .set('log', state.get('log').push(log))
                 ;
             });
