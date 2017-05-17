@@ -130,17 +130,6 @@ const gameStateReducer = function (state = initialState, action) {
             let number2 = 0;
             let number3 = 0;
 
-            // possibilities:
-            // DISTANCE
-            //      x   ->  -
-            //      6   ->  x   ->  x
-            //      6   ->  6   ->  x   ->  6 + x
-            //      6   ->  6   ->  6   ->  D
-            //  NO DISTANCE
-            //      x   ->  x
-            //      6   ->  x   ->  6 + x
-            //      6   ->  6   ->  D
-
             // get throw results
             const throws = state.get('diceThrows').toJS();
             number1 = getRandomThrow();
@@ -209,23 +198,6 @@ const gameStateReducer = function (state = initialState, action) {
                     player: currentPlayer
                 });
             }
-
-            // calculate new position
-
-            // if (number2 === 6) {
-            //     // 2 throws of 6 -> distance
-            //     newPosition = 10;
-            // } else {
-            //     newPosition = currentPosition + number1 + number2;
-            //     if (newPosition >= 40) {
-            //         newPosition -= 40;
-            //         money += 4000;
-            //         logs.push({
-            //             type: 'crossStart',
-            //             player: currentPlayer
-            //         });
-            //     }
-            // }
 
             const field = state.getIn(['fields', newPosition]);
             let actionRequired = resolveActionRequired(state, currentPlayer, field);
