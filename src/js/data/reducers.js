@@ -125,6 +125,8 @@ const gameStateReducer = function (state = initialState, action) {
             let money = currentPlayer.get('money');
             let parkingMoney = state.get('parkingMoney');
             let distancRounds = currentPlayer.get('distancRounds') || 0;
+            let stoppedRounds = currentPlayer.get('stoppedRounds') || 0;
+            let dopingRounds = currentPlayer.get('dopingRounds') || 0;
             let logs = [];
             let number1 = 0;
             let number2 = 0;
@@ -224,8 +226,8 @@ const gameStateReducer = function (state = initialState, action) {
             }
 
             if (field.get('type') === 'DOPING') {
-                console.warn('DOPING TODO');
-                // @todo
+                dopingRounds = 1;
+                logs.push(`You're stopped for 1 round.`);
             }
 
             return state.withMutations(state => {
@@ -237,6 +239,8 @@ const gameStateReducer = function (state = initialState, action) {
                     .setIn(['players', state.get('playerOnTurn'), 'field'], newPosition)
                     .setIn(['players', state.get('playerOnTurn'), 'money'], money)
                     .setIn(['players', state.get('playerOnTurn'), 'distancRounds'], distancRounds)
+                    .setIn(['players', state.get('playerOnTurn'), 'dopingRounds'], dopingRounds)
+                    .setIn(['players', state.get('playerOnTurn'), 'stoppedRounds'], stoppedRounds)
                     .set('parkingMoney', 0)
                 ;
 
@@ -288,26 +292,40 @@ const gameStateReducer = function (state = initialState, action) {
         }
 
         case END_TURN: {
-
-            let nextPlayerIndex = state.get('playerOnTurn') + 1;
-            if (nextPlayerIndex >= state.get('players').size) {
-                nextPlayerIndex = 0;
+            
+            const logs = [];
+            let playerResolved = false;
+            let nextPlayerIndex = state.get('playerOnTurn');
+            let nextPlayer;
+            while (!playerResolved) {
+                nextPlayerIndex++;
+                if (nextPlayerIndex >= state.get('players').size) {
+                    nextPlayerIndex = 0;
+                }
+                nextPlayer = state.getIn(['players', nextPlayerIndex]);
+                let dopingRounds = nextPlayer.get('dopingRounds');
+                if (dopingRounds > 0) {
+                    logs.push(`Player ${nextPlayer.get('name')} stopped due to doping.`);
+                    state = state.setIn(['players', nextPlayerIndex, 'dopingRounds'], --dopingRounds);
+                } else {
+                    playerResolved = true;
+                    logs.push({
+                        type: 'turnStarted',
+                        player: nextPlayer
+                    })
+                }
             }
-
-            const nextPlayer = state.getIn(['players', nextPlayerIndex]);
-
-            const log = {
-                type: 'turnStarted',
-                player: nextPlayer
-            };
 
             return state.withMutations(state => {
                 state
                     .setIn(['currentRound', 'state'], STATE_BEFORE_THROW)
                     .setIn(['currentRound', 'actionRequired'], null)
                     .set('playerOnTurn', nextPlayerIndex)
-                    .set('log', state.get('log').push(Immutable.fromJS(log)))
                 ;
+                // write logs
+                for (let i = 0; i < logs.length; i++) {
+                    state.set('log', state.get('log').push(Immutable.fromJS(logs[i])));
+                }
             });
         }
 
