@@ -79,3 +79,25 @@ export function countPayAmount (field, player) {
 
     console.warn('UNSUPPORTED FIELD TYPE: ', field.get('type'));
 }
+
+/**
+ * Checks if given player has all stable horses.
+ *
+ * @param {Object} player
+ * @param {Number} stableId
+ * @return {boolean}
+ */
+export function hasFullStable (player, stableId) {
+    const groups = {
+        1: [2, 4],
+        2: [7, 9, 10],
+        3: [12, 14, 15],
+        4: [17, 19, 20],
+        5: [22, 24, 25],
+        6: [27, 28, 30],
+        7: [32, 33, 35],
+        8: [38, 40]
+    };
+    const horsesCount = player.get('inventory').filter(item => groups[stableId].indexOf(item) !== -1);
+    return horsesCount.size === groups[stableId].length;
+}

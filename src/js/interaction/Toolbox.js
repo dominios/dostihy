@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getOwner } from '../utils/utils';
+import { getOwner, hasFullStable } from '../utils/utils';
 import BuyButton from './buttons/Buy';
 import PayButton from './buttons/Pay';
 import ThrowDiceButton from './buttons/ThrowDice';
@@ -19,6 +19,14 @@ class Toolbox extends React.Component {
                 return <PayButton amount={actionRequired.get('amount')} recipient={actionRequired.getIn(['to', 'name'])} action={actionRequired.toJS()} />;
             }
         }
+    }
+    
+    renderBuyRacingPoints () {
+        const field = this.props.currentField;
+        if (field.get('type') === 'HORSE' && hasFullStable(this.props.currentPlayer, field.getIn(['horse', 'group']))) {
+            return <span>BUY RACING POINT PLACEHOLDER</span>;
+        }
+        return null;
     }
 
     renderBuy () {
@@ -51,6 +59,7 @@ class Toolbox extends React.Component {
     render () {
         return <div className="interaction-container">
             { this.renderBuy() }
+            { this.renderBuyRacingPoints() }
             { this.renderPay() }
             { this.renderThrowDice() }
             { this.renderEndTurn() }

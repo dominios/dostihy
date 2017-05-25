@@ -36,15 +36,15 @@ const initialState = Immutable.fromJS({
             color: 'red',
             inventory: []
         },
-        {
-            index: 1,
-            name: 'Player 2',
-            field: 0,
-            money: 30000,
-            ai: false,
-            color: 'deepskyblue',
-            inventory: []
-        },
+        // {
+        //     index: 1,
+        //     name: 'Player 2',
+        //     field: 0,
+        //     money: 30000,
+        //     ai: false,
+        //     color: 'deepskyblue',
+        //     inventory: []
+        // },
         // {
         //     index: 2,
         //     name: 'Player 3',
