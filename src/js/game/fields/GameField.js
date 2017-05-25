@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import HorseField from './HorseField';
 import ParkingField from './ParkingField';
+import { getOwner } from '../../utils/utils';
 
 export default class GameField extends React.Component {
 
@@ -33,9 +34,14 @@ export default class GameField extends React.Component {
     render () {
 
         let content;
+        const owner = getOwner(this.props.field, this.props.players);
 
         switch (this.props.field.get('type')) {
-            case 'HORSE': content = <HorseField horse={this.props.field.get('horse')}/>; break;
+            case 'HORSE': {
+                const points = owner && owner.getIn(['racingPoints', this.props.field.get('id')]);
+                content = <HorseField horse={this.props.field.get('horse')} points={points || 0}/>;
+                break;
+            }
             case 'PARKING': content = <ParkingField/>; break;
             default: break;
         }

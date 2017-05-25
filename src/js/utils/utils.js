@@ -59,8 +59,11 @@ export function getOwner (field, players) {
 export function countPayAmount (field, player) {
 
     if (field.get('type') === 'HORSE') {
+        const points = player.getIn(['racingPoints', field.get('id')]) || 0;
+        if (points) {
+            return field.getIn(['horse', 'racingFees', (points - 1)]);
+        }
         return field.getIn(['horse', 'standardFee']);
-        // @todo racing points already assigned?
     }
 
     if (field.get('type') === 'TRAINER') {
