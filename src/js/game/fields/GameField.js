@@ -39,7 +39,7 @@ export default class GameField extends React.Component {
         switch (this.props.field.get('type')) {
             case 'HORSE': {
                 const points = owner && owner.getIn(['racingPoints', this.props.field.get('id')]);
-                content = <HorseField horse={this.props.field.get('horse')} points={points || 0}/>;
+                content = <HorseField horse={this.props.field.get('horse')} points={points || 0} owner={owner}/>;
                 break;
             }
             case 'PARKING': content = <ParkingField/>; break;

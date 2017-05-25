@@ -14,8 +14,10 @@ export default class HorseField extends React.Component {
 
     render () {
         return (<div className="fee-section">
-            <div><MoneyInlineHelper label="Cost" amount={this.props.horse.get('initialPrice')}/></div>
-            <div><MoneyInlineHelper label="Fee" amount={this.countFee()}/></div>
+            { this.props.owner
+                ? <div><MoneyInlineHelper label="Fee" amount={this.countFee()}/></div>
+                : <div><MoneyInlineHelper label="Cost" amount={this.props.horse.get('initialPrice')}/></div>
+            }
             <div className="racingPoints">
                 { '*'.repeat(this.props.points) }
             </div>
@@ -24,6 +26,7 @@ export default class HorseField extends React.Component {
 }
 
 HorseField.propTypes = {
+    owner: PropTypes.object,
     horse: PropTypes.object.isRequired,
     points: PropTypes.number.isRequired
 };
