@@ -99,7 +99,7 @@ function resolveActionRequired (state, player, field) {
     if (claimable.indexOf(field.get('type')) !== -1) {
         const owner = getOwner(field, state.get('players'));
         if (owner && owner.get('index') !== player.get('index')) {
-            return payPlayer(countPayAmount(field), player, owner, field);
+            return payPlayer(countPayAmount(field, owner), player, owner, field);
         }
     }
 
