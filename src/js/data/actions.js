@@ -19,6 +19,16 @@ export function buyCard (playerIndex, fieldId) {
     }
 }
 
+export const BUY_TOKENS = 'BUY_TOKENS';
+export function buyTokens (playerIndex, fieldId, tokensCount) {
+    return {
+        type: BUY_TOKENS,
+        playerIndex: playerIndex,
+        fieldIndex: fieldId,
+        tokensCount: tokensCount
+    }
+}
+
 export const END_TURN = 'END_TURN';
 export function endTurn () {
     return {

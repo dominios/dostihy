@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getOwner, hasFullStable } from '../utils/utils';
 import BuyButton from './buttons/Buy';
+import BuyTokensButton from './buttons/BuyTokens';
 import PayButton from './buttons/Pay';
 import ThrowDiceButton from './buttons/ThrowDice';
 import EndTurnButton from './buttons/EndTurn';
@@ -24,7 +25,10 @@ class Toolbox extends React.Component {
     renderBuyRacingPoints () {
         const field = this.props.currentField;
         if (field.get('type') === 'HORSE' && hasFullStable(this.props.currentPlayer, field.getIn(['horse', 'group']))) {
-            return <span>BUY RACING POINT PLACEHOLDER</span>;
+            return <BuyTokensButton
+                currentPlayer={this.props.currentPlayer}
+                currentField={this.props.currentField}
+            />;
         }
         return null;
     }
