@@ -18,6 +18,12 @@ class BuyTokensButton extends React.Component {
         this.onTokensToBuyChange = this.onTokensToBuyChange.bind(this);
     }
 
+    componentWillReceiveProps (nextProps) {
+        this.setState({
+            alreadyHasCount: nextProps.currentPlayer.getIn(['racingPoints', this.props.currentField.get('id')])
+        });
+    }
+
     onPurchase () {
         // @todo
     }
