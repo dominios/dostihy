@@ -9,6 +9,7 @@ import {
     PAY_PLAYER,
     PAY_BANK,
     BUY_CARD,
+    BUY_TOKENS,
     END_TURN,
     payBank,
     payPlayer
@@ -37,7 +38,7 @@ const initialState = Immutable.fromJS({
             inventory: [2, 4, 38, 40],
             racingPoints: {
                 2: 3,
-                4: 3,
+                4: 4,
                 38: 2,
                 40: 5
             }
@@ -375,6 +376,25 @@ const gameStateReducer = function (state = initialState, action) {
                     .set('log', state.get('log').push(Immutable.fromJS(log)))
                     .setIn(['players', action.playerIndex, 'money'], newMoneyAmount)
                     .setIn(['players', action.playerIndex, 'inventory'], inventory.push(fieldId))
+                ;
+            });
+        }
+
+        case BUY_TOKENS: {
+
+            const cardInfo = state.get('fields').find(field => {
+                return field.get('id') === action.fieldIndex;
+            });
+
+            const pathPoints = ['players', action.playerIndex, 'racingPoints', action.fieldIndex];
+            const pathMoney = ['players', action.playerIndex, 'money'];
+            const tokensBefore = state.getIn(pathPoints, 0);
+            const moneyBefore = state.getIn(pathMoney);
+
+            return state.withMutations(state => {
+                state
+                    .setIn(pathPoints, tokensBefore + action.tokensCount)
+                    .setIn(pathMoney, (moneyBefore - (action.tokensCount * cardInfo.getIn(['horse', 'racingCost']))))
                 ;
             });
         }

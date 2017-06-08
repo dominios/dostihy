@@ -25,7 +25,11 @@ class BuyTokensButton extends React.Component {
     }
 
     onPurchase () {
-        // @todo
+        this.props.buyTokens(
+            this.props.currentPlayer.get('index'),
+            this.props.currentField.get('id'),
+            this.state.tokensToBuy
+        );
     }
 
     onTokensToBuyChange (e) {
