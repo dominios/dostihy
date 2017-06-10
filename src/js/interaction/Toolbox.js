@@ -24,7 +24,8 @@ class Toolbox extends React.Component {
     
     renderBuyRacingPoints () {
         const field = this.props.currentField;
-        if (field.get('type') === 'HORSE' && hasFullStable(this.props.currentPlayer, field.getIn(['horse', 'group']))) {
+        const isAfterThrow = this.props.currentRound.get('state') === 'STATE_AFTER_THROW';
+        if (isAfterThrow && field.get('type') === 'HORSE' && hasFullStable(this.props.currentPlayer, field.getIn(['horse', 'group']))) {
             return <BuyTokensButton
                 currentPlayer={this.props.currentPlayer}
                 currentField={this.props.currentField}
