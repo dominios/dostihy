@@ -1,14 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getOwner, hasFullStable } from '../utils/utils';
+import { getOwner, hasFullStable, canBet } from '../utils/utils';
+import BetButton from './buttons/Bet';
 import BuyButton from './buttons/Buy';
 import BuyTokensButton from './buttons/BuyTokens';
 import PayButton from './buttons/Pay';
 import ThrowDiceButton from './buttons/ThrowDice';
 import EndTurnButton from './buttons/EndTurn';
-import { STATE_AFTER_THROW, STATE_AFTER_PAYMENT, PAY_BANK, PAY_PLAYER } from '../data/actions';
+import { STATE_AFTER_THROW, STATE_BEFORE_THROW, STATE_AFTER_PAYMENT, PAY_BANK, PAY_PLAYER } from '../data/actions';
 
 class Toolbox extends React.Component {
+
+    renderBet () {
+        const isAfterThrow = this.props.currentRound.get('state') === STATE_BEFORE_THROW;
+        return canBet(this.props.currentPlayer) && isAfterThrow && <BetButton/>;
+    }
 
     renderPay () {
         const actionRequired = this.props.currentRound.get('actionRequired');
@@ -21,7 +27,7 @@ class Toolbox extends React.Component {
             }
         }
     }
-    
+
     renderBuyRacingPoints () {
         const field = this.props.currentField;
         const isAfterThrow = this.props.currentRound.get('state') === 'STATE_AFTER_THROW';
@@ -63,6 +69,7 @@ class Toolbox extends React.Component {
 
     render () {
         return <div className="interaction-container">
+            { this.renderBet() }
             { this.renderBuy() }
             { this.renderBuyRacingPoints() }
             { this.renderPay() }

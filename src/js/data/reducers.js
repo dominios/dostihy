@@ -50,7 +50,13 @@ const initialState = Immutable.fromJS({
             money: 30000,
             ai: false,
             color: 'deepskyblue',
-            inventory: []
+            inventory: [12, 14, 15],
+            racingPoints: {
+                12: 1,
+                14: 4,
+                15: 2
+            }
+
         },
         // {
         //     index: 2,

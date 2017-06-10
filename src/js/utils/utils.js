@@ -84,6 +84,25 @@ export function countPayAmount (field, player) {
 }
 
 /**
+ * List of stables.
+ *
+ * Index is number of the stable and contains IDs of the
+ * corresponding fields.
+ *
+ * @type {Object}
+ */
+export const HORSE_STABLES = {
+    1: [2, 4],
+    2: [7, 9, 10],
+    3: [12, 14, 15],
+    4: [17, 19, 20],
+    5: [22, 24, 25],
+    6: [27, 28, 30],
+    7: [32, 33, 35],
+    8: [38, 40]
+};
+
+/**
  * Checks if given player has all stable horses.
  *
  * @param {Object} player
@@ -91,16 +110,19 @@ export function countPayAmount (field, player) {
  * @return {boolean}
  */
 export function hasFullStable (player, stableId) {
-    const groups = {
-        1: [2, 4],
-        2: [7, 9, 10],
-        3: [12, 14, 15],
-        4: [17, 19, 20],
-        5: [22, 24, 25],
-        6: [27, 28, 30],
-        7: [32, 33, 35],
-        8: [38, 40]
-    };
+    const groups = HORSE_STABLES;
     const horsesCount = player.get('inventory').filter(item => groups[stableId].indexOf(item) !== -1);
     return horsesCount.size === groups[stableId].length;
+}
+
+/**
+ * Checks if given player can bet.
+ *
+ * Player needs to have at least 1 horse with 3 or more racing tokens assigned.
+ *
+ * @param {Object} player player object.
+ * @returns {Boolean}
+ */
+export function canBet (player) {
+    return player.get('racingPoints').filter(token => token >= 3).size > 0;
 }
