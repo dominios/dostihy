@@ -18,11 +18,11 @@ class Floatings extends React.Component {
                 top: ((target.position().top + 20) + 'px'),
                 left: ((target.position().left + 20) + 'px')
             });
-        }, 300);
+        }, 1000);
 
         setTimeout(() => {
             $(`#paymentToBank`).addClass('hidden');
-        }, 2000);
+        }, 2800);
 
     }
 

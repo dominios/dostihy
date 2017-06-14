@@ -256,7 +256,7 @@ const gameStateReducer = function (state = initialState, action) {
                     .setIn(['players', state.get('playerOnTurn'), 'distancRounds'], distancRounds)
                     .setIn(['players', state.get('playerOnTurn'), 'dopingRounds'], dopingRounds)
                     .setIn(['players', state.get('playerOnTurn'), 'stoppedRounds'], stoppedRounds)
-                    .set('parkingMoney', 0)
+                    .set('parkingMoney', parkingMoney)
                 ;
 
                 // write logs
