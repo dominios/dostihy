@@ -4,6 +4,7 @@ import GameStatus from './game/GameStatus';
 import PlayersInfo from './player/PlayersInfo';
 import CurrentField from './game/CurrentField';
 import Toolbox from './interaction/Toolbox';
+import Floatings from './float/Floatings';
 
 export default class App extends React.Component {
 
@@ -15,6 +16,7 @@ export default class App extends React.Component {
         return <div>
             <div className="main">
                 <GameMap/>
+                <Floatings/>
             </div>
             <div className="inside">
                 <Toolbox/>

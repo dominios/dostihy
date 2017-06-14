@@ -1,0 +1,29 @@
+.floatings-container {
+  position: absolute;
+  .inner {
+    position: relative;
+    z-index: 9999999;
+
+    .payment-info {
+      display: inline-block;
+      background: #000;
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 15px;
+      position: absolute;
+      font-size: 18px;
+      letter-spacing: 2px;
+      top: 0;
+      left: 0;
+      transform: scale(1);
+      transition: all 2s ease-in-out, opacity .4s, transform .8s;
+
+      &.hidden {
+        opacity: 0;
+        transform: scale(2.5);
+      }
+
+    }
+
+  }
+}

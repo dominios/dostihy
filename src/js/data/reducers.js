@@ -24,7 +24,8 @@ const initialState = Immutable.fromJS({
         round: 1,
         player: 0,
         state: STATE_BEFORE_THROW,
-        actionRequired: null
+        actionRequired: null,
+        floatingInfo: []
     },
     playerOnTurn: 0,
     players: [
@@ -104,6 +105,7 @@ const initialState = Immutable.fromJS({
  * @param {Object} state current state.
  * @param {Object} player target player.
  * @param {Object} field field which triggers the action.
+ *
  * @return {Object}
  */
 function resolveActionRequired (state, player, field) {
@@ -267,16 +269,23 @@ const gameStateReducer = function (state = initialState, action) {
         case PAY_BANK: {
             return state.withMutations(state => {
                 const player = state.getIn(['players', action.from.index]);
+                const info = Immutable.fromJS({
+                    type: 'PLAYER_TO_BANK',
+                    from: player,
+                    amount: action.amount
+                });
                 const log = Immutable.fromJS({
                     type: 'pay',
                     player: player,
                     amount: action.amount,
                     reason: 'VET'
                 });
+                const pathToInfo = ['currentRound', 'floatingInfo'];
                 state
                     .set('parkingMoney', state.get('parkingMoney') + action.amount)
                     .setIn(['currentRound', 'state'], STATE_AFTER_PAYMENT)
                     .setIn(['currentRound', 'actionRequired'], null)
+                    .setIn(pathToInfo, state.getIn(pathToInfo).push(log))
                     .setIn(['players', player.get('index'), 'money'], (player.get('money') - action.amount))
                     .set('log', state.get('log').push(log))
                 ;
@@ -333,6 +342,7 @@ const gameStateReducer = function (state = initialState, action) {
                 state
                     .setIn(['currentRound', 'state'], STATE_BEFORE_THROW)
                     .setIn(['currentRound', 'actionRequired'], null)
+                    .setIn(['currentRound', 'floatingInfo'], new Immutable.List())
                     .set('playerOnTurn', nextPlayerIndex)
                 ;
                 // write logs

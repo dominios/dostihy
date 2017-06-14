@@ -21,7 +21,7 @@ class PlayersInfo extends React.Component {
             if (index === this.props.currentPlayerIndex) {
                 css.push('current');
             }
-            return <div className={css.join(' ')} key={index}>
+            return <div className={css.join(' ')} key={index} id={`player-info-${player.get('index')}`}>
                 <PlayerInlineHelper player={player} />
                 <section className="amount">
                     <MoneyInlineHelper amount={player.get('money')} />
