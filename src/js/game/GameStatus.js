@@ -94,7 +94,7 @@ class GameStatus extends React.Component {
 
 const mapStateToProps = function (state) {
     return {
-        log: state.get('log').takeLast(3),
+        log: state.get('log').takeLast(20).reverse(),
         currentRound: state.get('currentRound')
     };
 };

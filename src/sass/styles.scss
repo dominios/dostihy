@@ -7,15 +7,13 @@
 @import "floatings";
 
 @mixin panel () {
-  background: #eaeaea;
   width: 100%;
-  padding: 20px;
+  padding: 10px;
 }
 
 body {
-  background: #aaa;
-  box-shadow: 1px 1px 4px 1px #aaa;
-  padding: 10px;
+  background: #474d42;
+  padding: 0;
   display: flex;
   justify-content: space-between;
   font-family: 'Roboto', Arial, serif;
@@ -33,14 +31,15 @@ body {
 
   .inside {
     position: absolute;
-    top: 120px;
-    left: 150px;
-    width: 1020px;
-    height: 750px;
+    top: $field-height;
+    left: $field-width;
+    width: $field-width * 9;
+    height: $field-height * 9;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: #b5b5b5;
+    background: #f3f3f3;
+    padding: 20px;
     flex: 1;
     vertical-align: top;
 
@@ -57,10 +56,11 @@ body {
 
       &.game-status {
         .logs {
-          height: 5em;
+          height: 9em;
           display: flex;
           flex-direction: column-reverse;
           font-size: 12px;
+          overflow-y: scroll;
         }
       }
 
