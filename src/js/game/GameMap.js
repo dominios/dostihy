@@ -3,12 +3,16 @@ import { connect } from 'react-redux';
 import PlayerPawn from './PlayerPawn';
 import GameField from './fields/GameField';
 
+/**
+ * Game Map Class.
+ */
 class GameMap extends React.Component {
 
-    constructor (props) {
-        super(props);
-    }
-
+    /**
+     * Renders all game fields and players.
+     *
+     * @return {XML}
+     */
     render () {
         return (<div className="game-map">
             {

@@ -3,12 +3,18 @@ import { connect } from "react-redux";
 import MoneyInlineHelper from '../utils/helpers/Money';
 import $ from 'jquery';
 
+/**
+ * Floating information across the game field.
+ *
+ * @todo IN PROGRESS
+ */
 class Floatings extends React.Component {
 
-    constructor (props) {
-        super(props);
-    }
-
+    /**
+     * Animates the floating bubble.
+     *
+     * Currently supports only payment to parking.
+     */
     componentDidUpdate () {
 
         const target = $(`#field-21`); // parking
@@ -26,6 +32,16 @@ class Floatings extends React.Component {
 
     }
 
+    /**
+     * Renders the single floating item.
+     *
+     * @param item ???
+     * @param key ???
+     *
+     * @todo docs
+     *
+     * @return {XML}
+     */
     renderFloating (item, key) {
 
         const fromElement = $(`#player-info-${item.getIn(['player', 'index'])} .inline-money .amount`);

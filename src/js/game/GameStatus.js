@@ -3,8 +3,21 @@ import { connect } from 'react-redux';
 import PlayerInlineHelper from '../utils/helpers/Player';
 import MoneyInlineHelper from '../utils/helpers/Money';
 
+/**
+ * Game Status Class.
+ *
+ * Shows logs and other important information.
+ */
 class GameStatus extends React.Component {
 
+    /**
+     * Renders the single message from log.
+     *
+     * @param message
+     * @return {*}
+     *
+     * @todo export to separate component
+     */
     renderMessage (message) {
         if (typeof message === 'object') {
             switch (message.get('type')) {
@@ -77,6 +90,11 @@ class GameStatus extends React.Component {
         }
     }
 
+    /**
+     * Render log of the messages.
+     *
+     * @return {XML}
+     */
     renderLog () {
         return (<div className="logs">
             { this.props.log.map((message, index) => {
@@ -85,6 +103,11 @@ class GameStatus extends React.Component {
         </div>)
     }
 
+    /**
+     * Renders the game status box.
+     *
+     * @return {XML}
+     */
     render () {
         return (<div className="box-info game-status">
             { this.renderLog() }

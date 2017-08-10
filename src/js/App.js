@@ -8,10 +8,11 @@ import Floatings from './float/Floatings';
 
 export default class App extends React.Component {
 
-    constructor (props) {
-        super(props);
-    }
-
+    /**
+     * App JSX strcuture.
+     *
+     * @return {XML}
+     */
     render () {
         return <div>
             <div className="main">

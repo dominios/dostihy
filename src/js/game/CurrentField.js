@@ -1,13 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getOwner } from '../utils/utils';
+import { getOwner, getPlayerOnTurn } from '../utils/utils';
 
+/**
+ * Current Field Class.
+ *
+ * Shows the information about current game field the user is standing on.
+ */
 class CurrentField extends React.Component {
 
-    constructor (props) {
-        super(props);
-    }
-
+    /**
+     * Renders the ownership info box.
+     *
+     * @return {XML}
+     */
     renderOwnership () {
         if (this.props.ownedBy) {
             return (<section className="ownership">
@@ -16,6 +22,10 @@ class CurrentField extends React.Component {
         }
     }
 
+    /**
+     * Renders the current field info box.
+     * @return {XML}
+     */
     render () {
         return (<div className="box-info current-field">
             <h1>
@@ -28,7 +38,7 @@ class CurrentField extends React.Component {
 
 const mapStateToProps = function (state) {
 
-    const currentPlayer = state.getIn(['players', state.get('playerOnTurn')]);
+    const currentPlayer = getPlayerOnTurn(state);
     const currentField = state.getIn(['fields', currentPlayer.get('field')]);
 
     return {

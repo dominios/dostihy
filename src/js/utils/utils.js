@@ -126,3 +126,24 @@ export function hasFullStable (player, stableId) {
 export function canBet (player) {
     return player.get('racingPoints').filter(token => token >= 3).size > 0;
 }
+
+/**
+ * Returns current player object.
+ *
+ * @param {object} state game state.
+ * @return {object}
+ */
+export function getPlayerOnTurn (state) {
+    return state.getIn(['players', state.get('playerOnTurn')]);
+}
+
+/**
+ * Returns current player field.
+ *
+ * @param {object} state game state.
+ * @return {object}
+ */
+export function getCurrentField (state) {
+    const currentPlayer = getPlayerOnTurn(state);
+    return state.getIn(['fields', currentPlayer.get('field')]);
+}

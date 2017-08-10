@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getOwner, hasFullStable, canBet } from '../utils/utils';
+import { getOwner, hasFullStable, canBet, getPlayerOnTurn, getCurrentField } from '../utils/utils';
 import BetButton from './buttons/Bet';
 import BuyButton from './buttons/Buy';
 import BuyTokensButton from './buttons/BuyTokens';
@@ -9,6 +9,11 @@ import ThrowDiceButton from './buttons/ThrowDice';
 import EndTurnButton from './buttons/EndTurn';
 import { STATE_AFTER_THROW, STATE_BEFORE_THROW, STATE_AFTER_PAYMENT, PAY_BANK, PAY_PLAYER } from '../data/actions';
 
+/**
+ * Toolbox Class.
+ *
+ * Container consisting of user action buttons.
+ */
 class Toolbox extends React.Component {
 
     renderBet () {
@@ -30,7 +35,7 @@ class Toolbox extends React.Component {
 
     renderBuyRacingPoints () {
         const field = this.props.currentField;
-        const isAfterThrow = this.props.currentRound.get('state') === 'STATE_AFTER_THROW';
+        const isAfterThrow = this.props.currentRound.get('state') === STATE_AFTER_THROW;
         if (isAfterThrow && field.get('type') === 'HORSE' && hasFullStable(this.props.currentPlayer, field.getIn(['horse', 'group']))) {
             return <BuyTokensButton
                 currentPlayer={this.props.currentPlayer}
@@ -42,7 +47,7 @@ class Toolbox extends React.Component {
 
     renderBuy () {
         const allowed = ['HORSE', 'TRAINER', 'TRANSPORT', 'STABLES'];
-        const isAfterThrow = this.props.currentRound.get('state') === 'STATE_AFTER_THROW';
+        const isAfterThrow = this.props.currentRound.get('state') === STATE_AFTER_THROW;
         if (isAfterThrow && allowed.indexOf(this.props.currentField.get('type')) !== -1) {
             return <BuyButton
                 currentPlayer={this.props.currentPlayer}
@@ -54,7 +59,7 @@ class Toolbox extends React.Component {
     }
 
     renderThrowDice () {
-        if (this.props.currentRound.get('state') === 'STATE_BEFORE_THROW') {
+        if (this.props.currentRound.get('state') === STATE_BEFORE_THROW) {
             return <ThrowDiceButton/>;
         }
     }
@@ -67,6 +72,11 @@ class Toolbox extends React.Component {
         }
     }
 
+    /**
+     * Renders entire toolbox (all buttons).
+     *
+     * @return {XML}
+     */
     render () {
         return <div className="interaction-container">
             { this.renderBet() }
@@ -81,8 +91,8 @@ class Toolbox extends React.Component {
 
 const mapStateToProps = function (state) {
 
-    const currentPlayer = state.getIn(['players', state.get('playerOnTurn')]);
-    const currentField = state.getIn(['fields', currentPlayer.get('field')]);
+    const currentPlayer = getPlayerOnTurn(state);
+    const currentField = getCurrentField(state);
 
     return {
         currentRound: state.get('currentRound'),
