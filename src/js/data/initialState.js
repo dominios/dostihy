@@ -1,19 +1,12 @@
 import Immutable from 'immutable';
 import fields from './db/fields.json';
+
 import {
     STATE_BEFORE_THROW,
     STATE_AFTER_THROW,
     STATE_BEFORE_PAYMENT,
     STATE_AFTER_PAYMENT,
-    THROW_DICE,
-    PAY_PLAYER,
-    PAY_BANK,
-    BUY_CARD,
-    BUY_TOKENS,
-    END_TURN,
-    payBank,
-    payPlayer
-} from './actions';
+} from './states';
 
 const initialState = Immutable.fromJS({
     fields: fields,

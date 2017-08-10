@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import HorseField from './HorseField';
 import ParkingField from './ParkingField';
 import { getOwner } from '../../utils/utils';
-import { STATE_BETTING } from "../../data/actions";
+import { STATE_BETTING } from "../../data/states";
 import { connect } from "react-redux";
 
 class GameField extends React.Component {

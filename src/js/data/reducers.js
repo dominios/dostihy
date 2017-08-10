@@ -1,11 +1,7 @@
 import Immutable from 'immutable';
 import fields from './db/fields.json';
+
 import {
-    STATE_BEFORE_THROW,
-    STATE_AFTER_THROW,
-    STATE_BEFORE_PAYMENT,
-    STATE_AFTER_PAYMENT,
-    STATE_BETTING,
     THROW_DICE,
     PAY_PLAYER,
     PAY_BANK,
@@ -16,6 +12,15 @@ import {
     payBank,
     payPlayer
 } from './actions';
+
+import {
+    STATE_BEFORE_THROW,
+    STATE_AFTER_THROW,
+    STATE_BEFORE_PAYMENT,
+    STATE_AFTER_PAYMENT,
+    STATE_BETTING
+} from './states';
+
 import { getRandomThrow, getOwner, countPayAmount } from '../utils/utils';
 import initialState from "./initialState";
 
@@ -234,7 +239,7 @@ const gameStateReducer = function (state = initialState, action) {
         }
 
         case END_TURN: {
-            
+
             const logs = [];
             let playerResolved = false;
             let nextPlayerIndex = state.get('playerOnTurn');

@@ -7,7 +7,8 @@ import BuyTokensButton from './buttons/BuyTokens';
 import PayButton from './buttons/Pay';
 import ThrowDiceButton from './buttons/ThrowDice';
 import EndTurnButton from './buttons/EndTurn';
-import { STATE_AFTER_THROW, STATE_BEFORE_THROW, STATE_AFTER_PAYMENT, PAY_BANK, PAY_PLAYER } from '../data/actions';
+import { PAY_BANK, PAY_PLAYER } from '../data/actions';
+import { STATE_AFTER_THROW, STATE_BEFORE_THROW, STATE_AFTER_PAYMENT } from '../data/states';
 
 /**
  * Toolbox Class.
@@ -16,23 +17,37 @@ import { STATE_AFTER_THROW, STATE_BEFORE_THROW, STATE_AFTER_PAYMENT, PAY_BANK, P
  */
 class Toolbox extends React.Component {
 
+    /**
+     * @todo
+     * @return {Boolean|boolean|XML}
+     */
     renderBet () {
-        const isAfterThrow = this.props.currentRound.get('state') === STATE_BEFORE_THROW;
-        return canBet(this.props.currentPlayer) && isAfterThrow && <BetButton/>;
+        const isBeforeThrow = this.props.currentRound.get('state') === STATE_BEFORE_THROW;
+        return canBet(this.props.currentPlayer) && isBeforeThrow && <BetButton/>;
     }
 
+    /**
+     * @todo
+     * @return {XML}
+     */
     renderPay () {
         const actionRequired = this.props.currentRound.get('actionRequired');
         if (actionRequired) {
             if (actionRequired.get('type') === PAY_BANK) {
-                return <PayButton amount={actionRequired.get('amount')} recipient="BANK" action={actionRequired.toJS()} />;
+                return <PayButton amount={actionRequired.get('amount')} recipient="BANK"
+                                  action={actionRequired.toJS()}/>;
             }
             if (actionRequired.get('type') === PAY_PLAYER) {
-                return <PayButton amount={actionRequired.get('amount')} recipient={actionRequired.getIn(['to', 'name'])} action={actionRequired.toJS()} />;
+                return <PayButton amount={actionRequired.get('amount')} recipient={actionRequired.getIn(['to', 'name'])}
+                                  action={actionRequired.toJS()}/>;
             }
         }
     }
 
+    /**
+     * @todo
+     * @return {*}
+     */
     renderBuyRacingPoints () {
         const field = this.props.currentField;
         const isAfterThrow = this.props.currentRound.get('state') === STATE_AFTER_THROW;
@@ -79,12 +94,12 @@ class Toolbox extends React.Component {
      */
     render () {
         return <div className="interaction-container">
-            { this.renderBet() }
-            { this.renderBuy() }
-            { this.renderBuyRacingPoints() }
-            { this.renderPay() }
-            { this.renderThrowDice() }
-            { this.renderEndTurn() }
+            {this.renderBet()}
+            {this.renderBuy()}
+            {this.renderBuyRacingPoints()}
+            {this.renderPay()}
+            {this.renderThrowDice()}
+            {this.renderEndTurn()}
         </div>;
     }
 }
