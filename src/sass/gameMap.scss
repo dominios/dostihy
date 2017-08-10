@@ -16,6 +16,8 @@
     flex-direction: column;
     justify-content: space-between;
 
+    transition: background .2s;
+
     .pawns-placeholder {
       height: 30px;
       background: #fafafa;
@@ -61,6 +63,14 @@
 
       background: #f2f2f2;
       color: #333;
+
+      &.bet-available {
+        background: #f5f500;
+        &:hover {
+          background-color: #ffff00;
+        }
+        cursor: pointer;
+      }
 
       .field-label {
         font-weight: bold;

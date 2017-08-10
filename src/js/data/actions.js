@@ -3,6 +3,8 @@ export const STATE_AFTER_THROW = 'STATE_AFTER_THROW';
 export const STATE_BEFORE_PAYMENT = 'STATE_BEFORE_PAYMENT';
 export const STATE_AFTER_PAYMENT = 'STATE_AFTER_PAYMENT';
 
+export const STATE_BETTING = 'STATE_BETTING';
+
 export const THROW_DICE = 'THROW_DICE';
 export function throwDice () {
     return {
@@ -54,5 +56,12 @@ export function payPlayer (amount, player, owner, field) {
         from: player,
         to: owner,
         field: field
+    }
+}
+
+export const START_BET = 'START_BET';
+export function startBet () {
+    return {
+        type: START_BET
     }
 }

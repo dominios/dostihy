@@ -5,12 +5,14 @@ import {
     STATE_AFTER_THROW,
     STATE_BEFORE_PAYMENT,
     STATE_AFTER_PAYMENT,
+    STATE_BETTING,
     THROW_DICE,
     PAY_PLAYER,
     PAY_BANK,
     BUY_CARD,
     BUY_TOKENS,
     END_TURN,
+    START_BET,
     payBank,
     payPlayer
 } from './actions';
@@ -331,6 +333,10 @@ const gameStateReducer = function (state = initialState, action) {
                     .setIn(pathMoney, (moneyBefore - (action.tokensCount * cardInfo.getIn(['horse', 'racingCost']))))
                 ;
             });
+        }
+
+        case START_BET: {
+            return state.setIn(['currentRound', 'state'], STATE_BETTING);
         }
     }
 

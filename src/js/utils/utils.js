@@ -38,7 +38,7 @@ export function getRandomThrow () {
  * Returns owner of the field.
  *
  * @param {Object} field
- * @param {Array} players
+ * @param {Object} players
  * @return {Object}
  */
 export function getOwner (field, players) {
