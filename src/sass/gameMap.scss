@@ -91,6 +91,7 @@
     }
 
     .ownership {
+      visibility: hidden; // temporary!
       height: 18px;
       color: #eeeeee;
       transition: background 2s;
@@ -132,13 +133,37 @@
 
     &.field-transport,
     &.field-stables {
-      @include specialField("\f0d1", #5a5856);
+      @include specialField("\f0d1", #3daea8);
     }
 
     &.field-horse {
 
-      //background: #f2f2f2;
-      //color: #333;
+      &:after {
+        font-size: $field-height - 40px;
+        width: $field-width;
+        height: $field-height - 15px;
+        vertical-align: middle;
+        display: inline-block;
+        position: absolute;
+        text-align: center;
+        top: 15px;
+        content: url('../../assets/horse.svg');
+        opacity: 0.4;
+      }
+
+      .content {
+        opacity: 0;
+        background: #fff;
+        display: block;
+        z-index: 3;
+        transition: all .3s;
+        text-align: center;
+      }
+      &:hover {
+        .content {
+          opacity: 1;
+        }
+      }
 
       &.bet-available {
         background: #f5f500;

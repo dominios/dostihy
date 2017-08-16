@@ -65,7 +65,7 @@ class GameField extends React.Component {
         >
             <div className="pawns-placeholder"></div>
             <div className="field-label">
-                #{this.props.field.get('id')} {this.props.field.getIn(['text', 'name'])}
+                {this.props.field.getIn(['text', 'name'])}
             </div>
             <div className="content">
                 {content}
