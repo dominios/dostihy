@@ -26,7 +26,7 @@ class GameField extends React.Component {
             const player = players[i];
             const fieldId = parseInt(field.get('id'), 10);
             if (player.inventory.indexOf(fieldId) !== -1) {
-                return <div className="ownership free" style={{ background: player.color }}>{player.name}</div>;
+                return <div className="ownership" style={{ borderColor: player.color }}></div>;
             }
         }
 

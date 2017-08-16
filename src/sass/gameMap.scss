@@ -91,13 +91,21 @@
     }
 
     .ownership {
-      visibility: hidden; // temporary!
-      height: 18px;
-      color: #eeeeee;
+
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      content: '';
+      width: 0;
+      height: 0;
+      border-top: 15px solid;
+      border-left: 15px solid #fff !important;
+
+      color: transparent;
       transition: background 2s;
       &.free {
-        background: #bbb;
-        font-style: italic;
+        background: #ddd;
       }
     }
 
@@ -116,7 +124,8 @@
     &.field-distance,
     &.field-doping {
       background: #333;
-      @include specialField("\f05e", #68494d);
+      color: #ccc;
+      @include specialField("\f05e", #8f3e3e);
     }
 
     &.field-trainer {
@@ -152,16 +161,22 @@
       }
 
       .content {
-        opacity: 0;
+        position: absolute;
+        height: $field-height - 18px;
+        top: 18px;
+        width: $field-width;
         background: #fff;
-        display: block;
+        display: inline-block;
         z-index: 3;
-        transition: all .3s;
         text-align: center;
+        opacity: 0;
+        transform: scaleY(0);
+        transition: opacity .2s, transform .4s;
       }
       &:hover {
         .content {
           opacity: 1;
+          transform: scaleY(1);
         }
       }
 
