@@ -1,14 +1,30 @@
+@mixin specialField ($fontAwesomeIcon, $iconColor) {
+  &:after {
+    font-family: FontAwesome;
+    content: $fontAwesomeIcon;
+    font-size: $field-height - 40px;
+    color: $iconColor;
+    width: $field-width;
+    height: $field-height - 15px;
+    vertical-align: middle;
+    display: inline-block;
+    position: absolute;
+    text-align: center;
+    top: 15px;
+  }
+}
+
 .game-map {
   position: relative;
+
   .field {
     position: absolute;
     width: $field-width;
     height: $field-height;
-    color: white;
-    background: #ddd;
+    background: #fff;
+    color: #808080;
     text-align: center;
     padding: 0;
-    border: 1px solid #eee;
     font-size: 12px;
     float: left;
 
@@ -17,6 +33,53 @@
     justify-content: space-between;
 
     transition: background .2s;
+
+    &:nth-of-type(1),
+    &:nth-of-type(2),
+    &:nth-of-type(3),
+    &:nth-of-type(4),
+    &:nth-of-type(5),
+    &:nth-of-type(6),
+    &:nth-of-type(7),
+    &:nth-of-type(8),
+    &:nth-of-type(9),
+    &:nth-of-type(10),
+    &:nth-of-type(22),
+    &:nth-of-type(23),
+    &:nth-of-type(24),
+    &:nth-of-type(25),
+    &:nth-of-type(26),
+    &:nth-of-type(27),
+    &:nth-of-type(28),
+    &:nth-of-type(29),
+    &:nth-of-type(30),
+    &:nth-of-type(31) {
+      border-left: 1px solid #eee;
+    }
+
+    &:nth-of-type(1),
+    &:nth-of-type(40),
+    &:nth-of-type(39),
+    &:nth-of-type(38),
+    &:nth-of-type(37),
+    &:nth-of-type(36),
+    &:nth-of-type(35),
+    &:nth-of-type(34),
+    &:nth-of-type(33),
+    &:nth-of-type(32),
+    &:nth-of-type(11),
+    &:nth-of-type(12),
+    &:nth-of-type(13),
+    &:nth-of-type(14),
+    &:nth-of-type(15),
+    &:nth-of-type(16),
+    &:nth-of-type(17),
+    &:nth-of-type(18),
+    &:nth-of-type(19),
+    &:nth-of-type(20),
+    &:nth-of-type(21) {
+      border-bottom: 1px solid #eee;
+    }
 
     .pawns-placeholder {
       height: 30px;
@@ -38,31 +101,44 @@
     }
 
     &.field-start {
-      background: indianred;
+      @include specialField("\f11e", #dd5c2b);
     }
 
-    &.field-finances,
+    &.field-finances {
+      @include specialField("\f155", #cb3ab4);
+    }
+
     &.field-fortune {
-      background: lightgray;
+      @include specialField("\f29c", #62ac4e);
     }
 
     &.field-distance,
     &.field-doping {
       background: #333;
+      @include specialField("\f05e", #68494d);
     }
 
     &.field-trainer {
-      background: #8da7c7;
+      @include specialField("\f19d", #ac9a8b);
     }
 
     &.field-parking {
-      background: royalblue;
+      @include specialField("\f1b9", #28a0f2);
+    }
+
+    &.field-vet {
+      @include specialField("\f0f0", #6897d2);
+    }
+
+    &.field-transport,
+    &.field-stables {
+      @include specialField("\f0d1", #5a5856);
     }
 
     &.field-horse {
 
-      background: #f2f2f2;
-      color: #333;
+      //background: #f2f2f2;
+      //color: #333;
 
       &.bet-available {
         background: #f5f500;
