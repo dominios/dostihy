@@ -76,6 +76,24 @@ class Toolbox extends React.Component {
     renderThrowDice () {
         if (this.props.currentRound.get('state') === STATE_BEFORE_THROW) {
             return <ThrowDiceButton/>;
+        } else {
+            const rolls = this.props.currentRound.get('rolls');
+            let toResolve = rolls.reduce((sum, n) => {
+                return sum + n;
+            });
+            const dices = [];
+            if (toResolve > 6) {
+                do {
+                    dices.push(6);
+                    toResolve -= 6;
+                } while (toResolve > 6);
+                dices.push(toResolve);
+            } else {
+                dices.push(toResolve);
+            }
+            return <div className="throws">
+                { dices.reverse().map((amount, index) => <span key={`${amount}-${index}`} className={`dice dice-${amount}`}></span>)}
+            </div>;
         }
     }
 

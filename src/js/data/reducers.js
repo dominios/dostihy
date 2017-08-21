@@ -176,6 +176,7 @@ const gameStateReducer = function (state = initialState, action) {
                     .set('diceThrows', Immutable.fromJS(throws))
                     .setIn(['currentRound', 'state'], STATE_AFTER_THROW)
                     .setIn(['currentRound', 'actionRequired'], actionRequired ? Immutable.fromJS(actionRequired) : null)
+                    .setIn(['currentRound', 'rolls'], Immutable.fromJS([number1, number2, number3]))
                     .setIn(['players', state.get('playerOnTurn'), 'field'], newPosition)
                     .setIn(['players', state.get('playerOnTurn'), 'money'], money)
                     .setIn(['players', state.get('playerOnTurn'), 'distancRounds'], distancRounds)
@@ -265,6 +266,7 @@ const gameStateReducer = function (state = initialState, action) {
 
             return state.withMutations(state => {
                 state
+                    .setIn(['currentRound', 'rolls'], Immutable.fromJS([]))
                     .setIn(['currentRound', 'state'], STATE_BEFORE_THROW)
                     .setIn(['currentRound', 'actionRequired'], null)
                     .setIn(['currentRound', 'floatingInfo'], new Immutable.List())
