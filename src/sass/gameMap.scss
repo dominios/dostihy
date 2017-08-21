@@ -18,6 +18,7 @@
   position: relative;
 
   .field {
+    cursor: pointer;
     position: absolute;
     width: $field-width;
     height: $field-height;
@@ -160,23 +161,29 @@
         opacity: 0.4;
       }
 
+      overflow: hidden;
+
       .content {
         position: absolute;
         height: $field-height - 18px;
-        top: 18px;
+        top: $field-height / 2 + 20px;
         width: $field-width;
-        background: #fff;
         display: inline-block;
         z-index: 3;
         text-align: center;
         opacity: 0;
-        transform: scaleY(0);
-        transition: opacity .2s, transform .4s;
+        transition: opacity .5s, top .3s;
+        padding-top: 10px;
+        padding-left: 10px;
+        color: #444;
+        background: #eee;
+        border-bottom: 3px solid #888888;
+
       }
       &:hover {
         .content {
-          opacity: 1;
-          transform: scaleY(1);
+          top: 18px;
+          opacity: 0.9;
         }
       }
 
