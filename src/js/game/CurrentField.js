@@ -17,7 +17,7 @@ class CurrentField extends React.Component {
     renderOwnership () {
         if (this.props.ownedBy) {
             return (<section className="ownership">
-                Owned by: <span color={this.props.ownedBy.get('color')}> {this.props.ownedBy.get('name')} </span>
+                Owned by: <span className={`player-color-${this.props.ownedBy.get('index')}`}> {this.props.ownedBy.get('name')} </span>
             </section>);
         }
     }

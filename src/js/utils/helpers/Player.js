@@ -12,7 +12,7 @@ export default class PlayerInlineHelper extends React.Component {
      * @return {XML}
      */
     render () {
-        return <span style={{color: this.props.player.get('color')}}>{this.props.player.get('name')}</span>;
+        return <span className={`player-color-${this.props.player.get('index')}`}>{this.props.player.get('name')}</span>;
     }
 }
 

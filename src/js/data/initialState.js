@@ -27,7 +27,6 @@ const initialState = Immutable.fromJS({
             field: 0,
             money: 30000,
             ai: false,
-            color: 'red',
             inventory: [2, 4, 38, 40],
             racingPoints: {
                 2: 3,
@@ -42,7 +41,6 @@ const initialState = Immutable.fromJS({
             field: 0,
             money: 30000,
             ai: false,
-            color: 'deepskyblue',
             inventory: [12, 14, 15],
             racingPoints: {
                 12: 1,
@@ -57,7 +55,6 @@ const initialState = Immutable.fromJS({
         //     field: 0,
         //     money: 30000,
         //     ai: false,
-        //     color: 'green',
         //     inventory: []
         // },
         // {
@@ -66,7 +63,6 @@ const initialState = Immutable.fromJS({
         //     field: 0,
         //     money: 30000,
         //     ai: false,
-        //     color: 'violet',
         //     inventory: []
         // },
         // {
@@ -75,7 +71,6 @@ const initialState = Immutable.fromJS({
         //     field: 0,
         //     money: 30000,
         //     ai: false,
-        //     color: 'white',
         //     inventory: []
         // },
         // {
@@ -84,7 +79,6 @@ const initialState = Immutable.fromJS({
         //     field: 0,
         //     money: 30000,
         //     ai: false,
-        //     color: 'black',
         //     inventory: []
         // },
     ],

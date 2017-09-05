@@ -49,7 +49,7 @@ export default class PlayerPawn extends React.Component {
      * @todo generalize player color
      */
     render () {
-        return <div className="pawn" id={`pawn-${this.props.index}`} style={{background: this.props.player.get('color')}}>
+        return <div className={`pawn player-background-${this.props.player.get('index')}`} id={`pawn-${this.props.index}`}>
             { `${this.props.index}` }
         </div> ;
     }
