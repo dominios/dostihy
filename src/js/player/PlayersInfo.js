@@ -19,13 +19,14 @@ class PlayersInfo extends React.Component {
      * @todo move to separate component
      */
     renderInventory (player) {
-        const items = player.get('inventory').map(item => {
-            const field = this.props.fields.filter(field => item == field.get('id'));
-            return field.getIn([0, 'text', 'name']);
-        });
-        return (<section className="inventory">
-            Inventory: { items.size ? items.join(', ') : <i>empty</i> }
-        </section>);
+        return <section className="inventory">
+            Inventory: {player.get('inventory').map(item => {
+            const field = this.props.fields.filter(field => item === +field.get('id')).get(0);
+            return <span key={field.get('id')} className={`inventory-item field-${field.get('type').toLowerCase()} stable-${field.getIn(['horse', 'group'], 'none')}`}>
+                {field.getIn(['text', 'name'])}
+            </span>
+        })}
+        </section>;
     }
 
     /**
@@ -40,11 +41,11 @@ class PlayersInfo extends React.Component {
             css.push('current');
         }
         return <div className={css.join(' ')} key={index} id={`player-info-${player.get('index')}`}>
-            <PlayerInlineHelper player={player} />
+            <PlayerInlineHelper player={player}/>
             <section className="amount">
-                <MoneyInlineHelper amount={player.get('money')} />
+                <MoneyInlineHelper amount={player.get('money')}/>
             </section>
-            { this.renderInventory(player) }
+            {this.renderInventory(player)}
         </div>
 
     }
@@ -56,7 +57,7 @@ class PlayersInfo extends React.Component {
      */
     render () {
         return <div>
-            { this.props.players.map((player, index) => this.renderPlayer(player, index)) }
+            {this.props.players.map((player, index) => this.renderPlayer(player, index))}
         </div>;
     }
 }

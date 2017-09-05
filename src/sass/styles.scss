@@ -4,7 +4,6 @@
 @import "dice";
 
 @import "variables";
-@import "currentPlayer";
 @import "gameMap";
 @import "fields";
 @import "floatings";
@@ -115,6 +114,46 @@ body {
           opacity: 1;
           font-size: 15px;
           padding: 20px;
+        }
+        .inventory {
+          .inventory-item {
+            margin-right: 4px;
+            &:after {
+              content: ',';
+              color: #292b2c;
+            }
+            &:last-child {
+              &:after {
+                display: none;
+              }
+            }
+            &.field-horse {
+              &.stable-1 {
+                color: $stable-1-color;
+              }
+              &.stable-2 {
+                color: $stable-2-color;
+              }
+              &.stable-3 {
+                color: $stable-3-color;
+              }
+              &.stable-4 {
+                color: $stable-4-color;
+              }
+              &.stable-5 {
+                color: $stable-5-color;
+              }
+              &.stable-6 {
+                color: $stable-6-color;
+              }
+              &.stable-7 {
+                color: $stable-7-color;
+              }
+              &.stable-8 {
+                color: $stable-8-color;
+              }
+            }
+          }
         }
       }
     }
