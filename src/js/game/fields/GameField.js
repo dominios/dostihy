@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import HorseField from './HorseField';
 import ParkingField from './ParkingField';
 import { getOwner } from '../../utils/utils';
-import { STATE_BETTING } from "../../data/states";
+import { STATE_BETTING_SELECT } from "../../data/states";
 import { connect } from "react-redux";
 
 class GameField extends React.Component {
@@ -43,11 +43,15 @@ class GameField extends React.Component {
         switch (this.props.field.get('type')) {
             case 'HORSE': {
                 const points = owner && owner.getIn(['racingPoints', this.props.field.get('id')]);
+                const canBet = this.props.isBetting && points >= 3 && owner !== this.props.currentPlayer
+
                 content = <HorseField
                     horse={this.props.field.get('horse')}
                     points={points || 0} owner={owner}
+                    canBet={canBet}
                 />;
-                if (this.props.isBetting && points >= 3 && owner !== this.props.currentPlayer) {
+
+                if (canBet) {
                     classList.push('bet-available');
                 }
                 break;
@@ -83,7 +87,7 @@ GameField.propTypes = {
 
 const mapStateToProps = function (state) {
     return {
-        isBetting: state.getIn(['currentRound', 'state']) === STATE_BETTING,
+        isBetting: state.getIn(['currentRound', 'state']) === STATE_BETTING_SELECT,
         currentPlayer: state.getIn(['players', state.get('playerOnTurn')])
     }
 };

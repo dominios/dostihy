@@ -18,7 +18,7 @@ import {
     STATE_AFTER_THROW,
     STATE_BEFORE_PAYMENT,
     STATE_AFTER_PAYMENT,
-    STATE_BETTING
+    STATE_BETTING_SELECT
 } from './states';
 
 import { getRandomThrow, getOwner, countPayAmount } from '../utils/utils';
@@ -349,7 +349,7 @@ export const playerActionsReducer = function (state = initialState, action) {
         }
 
         case START_BET: {
-            return state.setIn(['currentRound', 'state'], STATE_BETTING);
+            return state.setIn(['currentRound', 'state'], STATE_BETTING_SELECT);
         }
     }
 

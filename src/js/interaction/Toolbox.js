@@ -8,7 +8,10 @@ import PayButton from './buttons/Pay';
 import ThrowDiceButton from './buttons/ThrowDice';
 import EndTurnButton from './buttons/EndTurn';
 import { PAY_BANK, PAY_PLAYER } from '../data/actions';
-import { STATE_AFTER_THROW, STATE_BEFORE_THROW, STATE_AFTER_PAYMENT } from '../data/states';
+import {
+    STATE_AFTER_THROW, STATE_BEFORE_THROW, STATE_AFTER_PAYMENT, STATE_BETTING_SELECT,
+    isBeforeThrow
+} from '../data/states';
 
 /**
  * Toolbox Class.
@@ -74,7 +77,7 @@ class Toolbox extends React.Component {
     }
 
     renderThrowDice () {
-        if (this.props.currentRound.get('state') === STATE_BEFORE_THROW) {
+        if (isBeforeThrow(this.props.currentRound)) {
             return <ThrowDiceButton/>;
         } else {
             const rolls = this.props.currentRound.get('rolls');
@@ -92,7 +95,8 @@ class Toolbox extends React.Component {
                 dices.push(toResolve);
             }
             return <div className="throws">
-                { dices.reverse().map((amount, index) => <span key={`${amount}-${index}`} className={`dice dice-${amount}`}></span>)}
+                {dices.reverse().map((amount, index) => <span key={`${amount}-${index}`}
+                                                              className={`dice dice-${amount}`}></span>)}
             </div>;
         }
     }

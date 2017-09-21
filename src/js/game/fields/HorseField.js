@@ -28,5 +28,6 @@ export default class HorseField extends React.Component {
 HorseField.propTypes = {
     owner: PropTypes.object,
     horse: PropTypes.object.isRequired,
-    points: PropTypes.number.isRequired
+    points: PropTypes.number.isRequired,
+    canBet: PropTypes.bool.isRequired
 };
