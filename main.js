@@ -7,10 +7,11 @@ import App from './src/js/App';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
-import gameStateReducer from './src/js/data/reducers';
+import { gameStateReducer, playerActionsReducer } from './src/js/data/reducers';
 
 const logger = createLogger();
 const store = createStore(
+    playerActionsReducer,
     gameStateReducer,
     applyMiddleware(thunk, logger)
 );

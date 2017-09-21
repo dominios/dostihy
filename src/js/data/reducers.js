@@ -54,7 +54,11 @@ function resolveActionRequired (state, player, field) {
 
 }
 
-const gameStateReducer = function (state = initialState, action) {
+export const gameStateReducer = function (state = initialState, action) {
+    return state
+};
+
+export const playerActionsReducer = function (state = initialState, action) {
 
     switch (action.type) {
 
@@ -349,5 +353,3 @@ const gameStateReducer = function (state = initialState, action) {
 
     return state;
 };
-
-export default gameStateReducer;
