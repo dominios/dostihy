@@ -5,11 +5,12 @@ import PlayersInfo from './player/PlayersInfo';
 import CurrentField from './game/CurrentField';
 import Toolbox from './interaction/Toolbox';
 import Floatings from './float/Floatings';
+import AIObserver from "./ai/AIObserver";
 
 export default class App extends React.Component {
 
     /**
-     * App JSX strcuture.
+     * App JSX structure.
      *
      * @return {XML}
      */
@@ -25,6 +26,7 @@ export default class App extends React.Component {
                 <PlayersInfo/>
                 <GameStatus/>
             </div>
+            <AIObserver/>
         </div>;
     }
 }
