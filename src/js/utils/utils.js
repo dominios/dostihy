@@ -5,7 +5,7 @@
  */
 export function getRandomThrow () {
 
-    let result = prompt('Roll', 1);
+    let result = false; // prompt('Roll', 1);
     if (result) {
         return parseInt(result, 10);
     }
@@ -54,9 +54,11 @@ export function getOwner (field, players) {
  *
  * @param {Object} field field to calculate amount for.
  * @param {Object} player field owner.
+ * @param {Number} movementSize number of fields travelled.
+ *
  * @return {Number}
  */
-export function countPayAmount (field, player) {
+export function countPayAmount (field, player, movementSize = 0) {
 
     if (field.get('type') === 'HORSE') {
         const points = player.getIn(['racingPoints', field.get('id')]) || 0;
@@ -74,9 +76,9 @@ export function countPayAmount (field, player) {
     if (field.get('type') === 'TRANSPORT' || field.get('type') === 'STABLES') {
         const ownerCards = player.get('inventory').filter(item => [13, 29].indexOf(item) !== -1);
         if (ownerCards.size === 1) {
-            return ((number1 + number2) * 80);
+            return (movementSize * 80);
         } else if (ownerCards.size === 2) {
-            return ((number1 + number2) * 200);
+            return (movementSize * 200);
         }
     }
 

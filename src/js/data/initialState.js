@@ -26,8 +26,9 @@ const initialState = Immutable.fromJS({
             name: 'Dominik',
             field: 0,
             money: 30000,
-            ai: false,
-            inventory: [2, 4, 38, 40],
+            ai: true,
+            inventory: [],
+            // inventory: [2, 4, 38, 40],
             racingPoints: {
                 2: 3,
                 4: 4,
@@ -41,7 +42,8 @@ const initialState = Immutable.fromJS({
             field: 0,
             money: 30000,
             ai: true,
-            inventory: [12, 14, 15],
+            inventory: [],
+            // inventory: [12, 14, 15],
             racingPoints: {
                 12: 1,
                 14: 4,
@@ -49,37 +51,41 @@ const initialState = Immutable.fromJS({
             }
 
         },
+        {
+            index: 2,
+            name: 'Player 3',
+            field: 0,
+            money: 30000,
+            ai: true,
+            inventory: [],
+            racingPoints: {}
+        },
+        {
+            index: 3,
+            name: 'Player 4',
+            field: 0,
+            money: 30000,
+            ai: true,
+            inventory: [],
+            racingPoints: {}
+        },
+        {
+            index: 4,
+            name: 'Player 5',
+            field: 0,
+            money: 30000,
+            ai: true,
+            inventory: [],
+            racingPoints: {}
+        },
         // {
-        //     index: 2,
-        //     name: 'Player 3',
-        //     field: 0,
-        //     money: 30000,
-        //     ai: false,
-        //     inventory: []
-        // },
-        // {
-        //     index: 3,
-        //     name: 'Player 4',
-        //     field: 0,
-        //     money: 30000,
-        //     ai: false,
-        //     inventory: []
-        // },
-        // {
-        //     index: 3,
-        //     name: 'Player 5',
-        //     field: 0,
-        //     money: 30000,
-        //     ai: false,
-        //     inventory: []
-        // },
-        // {
-        //     index: 3,
+        //     index: 5,
         //     name: 'Player 6',
         //     field: 0,
         //     money: 30000,
-        //     ai: false,
-        //     inventory: []
+        //     ai: true,
+        //     inventory: [],
+        //     racingPoints: {}
         // },
     ],
     log: ['The Game has started']

@@ -30,16 +30,17 @@ import initialState from "./initialState";
  * @param {Object} state current state.
  * @param {Object} player target player.
  * @param {Object} field field which triggers the action.
+ * @param {Number} distanceCovered number of fields travelled on last turn.
  *
  * @return {Object}
  */
-function resolveActionRequired (state, player, field) {
+function resolveActionRequired (state, player, field, distanceCovered = 0) {
 
     const claimable = ['HORSE', 'TRAINER', 'STABLES', 'TRANSPORT'];
     if (claimable.indexOf(field.get('type')) !== -1) {
         const owner = getOwner(field, state.get('players'));
         if (owner && owner.get('index') !== player.get('index')) {
-            return payPlayer(countPayAmount(field, owner), player, owner, field);
+            return payPlayer(countPayAmount(field, owner), player, owner, field, distanceCovered);
         }
     }
 
@@ -146,7 +147,8 @@ export const playerActionsReducer = function (state = initialState, action) {
             }
 
             const field = state.getIn(['fields', newPosition]);
-            let actionRequired = resolveActionRequired(state, currentPlayer, field);
+            const distanceCovered = number3 ? number2 + number3 : number1 + number2;
+            let actionRequired = resolveActionRequired(state, currentPlayer, field, distanceCovered);
 
 
             if (field.get('type') === 'PARKING') {

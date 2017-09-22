@@ -23,9 +23,6 @@ export function isBeforeThrow (currentRound) {
         STATE_BETTING
     ];
 
-    console.info(`CURRENT STATE: ${currentRound.get('state')}`);
-    console.info(`IS BEFORE? ${statesBefore.indexOf(currentRound.get('state')) > -1}`);
-
     return statesBefore.indexOf(currentRound.get('state')) > -1;
 }
 

@@ -1,8 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { canBet, getPlayerOnTurn } from "../utils/utils";
+import { canBet, getCurrentField, getOwner, getPlayerOnTurn } from "../utils/utils";
 import { isAfterThrow, isBeforeThrow } from "../data/states";
-import { endTurn, throwDice } from "../data/actions";
+import { buyCard, endTurn, throwDice } from "../data/actions";
+import { shouldBuyItem } from "../utils/ai";
+import { TYPE_HORSE, TYPE_STABLES, TYPE_TRAINER, TYPE_TRANSPORT } from "../utils/constants";
+
+const AI_TIMEOUT = 1000;
 
 class AIObserver extends React.Component {
 
@@ -19,14 +23,16 @@ class AIObserver extends React.Component {
         this.state = {
             round: props.round,
             player: props.player,
-            isAiActive: props.player.get('ai')
+            isAiActive: props.player.get('ai'),
+            field: props.field
         };
     }
 
     resolveProps (props) {
 
         const nextState = {
-            round: props.round
+            round: props.round,
+            field: props.field
         };
 
         if (this.props.player.get('index') !== props.player.get('index')) {
@@ -34,47 +40,61 @@ class AIObserver extends React.Component {
             nextState.player = props.player;
         }
 
-        if (props.player.get('ai') === true) {
-            nextState.isAiActive = true;
-        } else {
-            nextState.isAiActive = false;
-        }
+        nextState.isAiActive = props.player.get('ai') === true;
 
         this.setState(nextState);
     }
 
     makeTurn () {
 
-        // delay for the AI to take action to simulate thinking time
-        setTimeout(() => {
 
-            if (!this.state.isAiActive) {
-                return;
+        if (!this.state.isAiActive) {
+            return;
+        }
+
+        if (isBeforeThrow(this.state.round)) {
+
+            if (canBet(this.state.player)) {
+                // @todo make AI think about betting...
+                console.warn('AI BETTING NOT YET IMPLEMENTED');
             }
 
-            if (isBeforeThrow(this.state.round)) {
+            // we can just throw a dice
+            console.info('AI throwing a dice...');
+            this.props.throwDice();
+        }
 
-                if (canBet(this.state.player)) {
-                    // @todo make AI think about betting...
-                    console.warn('AI BETTING NOT YET IMPLEMENTED');
-                }
+        else if (isAfterThrow(this.state.round)) {
+            const buyable = [TYPE_HORSE, TYPE_TRAINER, TYPE_TRANSPORT, TYPE_STABLES];
+            const owner = getOwner(this.state.field, this.props.players);
 
-                // we can just throw a dice
-                console.info('AI throwing a dice...');
-                this.props.throwDice();
+            if (this.state.round.get('actionRequired')) {
+                console.info('AI ACTION IS REQUIRED...');
+                this.props.dispatch(this.state.round.get('actionRequired').toJS());
             }
 
-            else if (isAfterThrow(this.state.round)) {
+            else if (buyable.indexOf(this.state.field.get('type')) !== -1 && !owner) {
 
-                if (this.state.round.get('actionRequired')) {
-                    console.info('AI ACTION IS REQUIRED...');
+                console.info('AI IS DECIDING TO BUY SOMETHING');
+                const shouldBuy = shouldBuyItem(this.state.player, this.state.field);
+                if (shouldBuy) {
+                    console.info('AI decided to buy an item');
+                    this.props.buyCard(this.state.player.get('index'), this.state.field.get('id'));
+                    setTimeout(() => {
+                        this.makeTurn();
+                    }, AI_TIMEOUT);
                 } else {
-                    console.info('AI IS ENDING A TURN');
+                    console.info('AI decided NOT to buy an item');
                     this.props.endTurn();
                 }
             }
 
-        }, 3000);
+            else {
+                console.info('AI IS ENDING A TURN');
+                this.props.endTurn();
+            }
+        }
+
 
     }
 
@@ -94,7 +114,11 @@ class AIObserver extends React.Component {
         }
 
         if (this.state.round.get('state') !== prevState.round.get('state')) {
-            this.makeTurn();
+            // delay for the AI to take action to simulate thinking time
+            setTimeout(() => {
+                console.info('AI is invoking a turn...');
+                this.makeTurn();
+            }, AI_TIMEOUT);
         }
     }
 
@@ -105,15 +129,19 @@ class AIObserver extends React.Component {
 
 const mapStateToProps = function (state) {
     return {
+        players: state.get('players'),
         player: getPlayerOnTurn(state),
-        round: state.get('currentRound')
+        round: state.get('currentRound'),
+        field: getCurrentField(state)
     };
 };
 
 const mapDispatchToProps = function (dispatch) {
     return {
+        dispatch,
         throwDice: () => dispatch(throwDice()),
-        endTurn: () => dispatch(endTurn())
+        endTurn: () => dispatch(endTurn()),
+        buyCard: (playerIndex, fieldId) => dispatch(buyCard(playerIndex, fieldId)),
     };
 };
 
