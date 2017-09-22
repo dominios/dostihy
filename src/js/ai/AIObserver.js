@@ -1,66 +1,86 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { canBet, getPlayerOnTurn } from "../utils/utils";
-import { isBeforeThrow } from "../data/states";
-import { throwDice } from "../data/actions";
+import { isAfterThrow, isBeforeThrow } from "../data/states";
+import { endTurn, throwDice } from "../data/actions";
 
 class AIObserver extends React.Component {
 
     constructor (props) {
         super(props);
 
+
+        // this.state = {
+        //     round: null,
+        //     player: null,
+        //     isAiActive: null
+        // };
+
         this.state = {
-            round: null,
-            player: null,
-            isAiActive: false
+            round: props.round,
+            player: props.player,
+            isAiActive: props.player.get('ai')
         };
     }
 
     resolveProps (props) {
 
-        this.setState({
+        const nextState = {
             round: props.round
-        });
+        };
 
         if (this.props.player.get('index') !== props.player.get('index')) {
-            this.setState({
-                player: props.player
-            });
             console.info('AI CHANGING PLAYER');
+            nextState.player = props.player;
         }
 
         if (props.player.get('ai') === true) {
-            this.setState({
-                isAiActive: true
-            });
-            console.info('AI IS ACTIVE');
+            nextState.isAiActive = true;
         } else {
-            this.setState({
-                isAiActive: false
-            });
-            console.info('AI IS INACTIVE');
+            nextState.isAiActive = false;
         }
+
+        this.setState(nextState);
     }
 
     makeTurn () {
 
-        if (isBeforeThrow(this.state.round)) {
+        // delay for the AI to take action to simulate thinking time
+        setTimeout(() => {
 
-            if (canBet(this.state.player)) {
-                // @todo make AI think about betting...
-                console.warn('AI BETTING NOT YET IMPLEMENTED');
+            if (!this.state.isAiActive) {
+                return;
             }
 
-            // we can just throw a dice
-            console.info('AI throwing a dice...');
-            this.props.throwDice();
-        }
+            if (isBeforeThrow(this.state.round)) {
 
+                if (canBet(this.state.player)) {
+                    // @todo make AI think about betting...
+                    console.warn('AI BETTING NOT YET IMPLEMENTED');
+                }
+
+                // we can just throw a dice
+                console.info('AI throwing a dice...');
+                this.props.throwDice();
+            }
+
+            else if (isAfterThrow(this.state.round)) {
+
+                if (this.state.round.get('actionRequired')) {
+                    console.info('AI ACTION IS REQUIRED...');
+                } else {
+                    console.info('AI IS ENDING A TURN');
+                    this.props.endTurn();
+                }
+            }
+
+        }, 3000);
 
     }
 
     componentDidMount () {
         this.resolveProps(this.props);
+        this.makeTurn();
     }
 
     componentWillReceiveProps (nextProps) {
@@ -68,6 +88,7 @@ class AIObserver extends React.Component {
     }
 
     componentDidUpdate (prevProps, prevState) {
+
         if (!this.state.isAiActive) {
             return;
         }
@@ -91,7 +112,8 @@ const mapStateToProps = function (state) {
 
 const mapDispatchToProps = function (dispatch) {
     return {
-        throwDice: () => dispatch(throwDice())
+        throwDice: () => dispatch(throwDice()),
+        endTurn: () => dispatch(endTurn())
     };
 };
 

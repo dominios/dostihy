@@ -111,6 +111,13 @@ class Toolbox extends React.Component {
      * @return {XML}
      */
     render () {
+
+        if (this.props.currentPlayer.get('ai')) {
+            return <div className="interaction-container">
+                Wait for other player to complete his turn.
+            </div>;
+        }
+
         return <div className="interaction-container">
             {this.renderBet()}
             {this.renderBuy()}
