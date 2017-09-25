@@ -373,11 +373,14 @@ export const playerActionsReducer = function (state = initialState, action) {
         }
 
         case CONFIRM_BET: {
+            const player = state.getIn(['players', state.get('playerOnTurn')]);
+            const amount = +action.amount;
             newState = state.withMutations(state => {
                 state
                     .setIn(['currentRound', 'state'], STATE_BEFORE_THROW)
                     .setIn(['currentRound', 'bets', action.horse.get('id'), 'status'], 'CONFIRMED')
-                    .setIn(['currentRound', 'bets', action.horse.get('id'), 'amount'], +action.amount)
+                    .setIn(['currentRound', 'bets', action.horse.get('id'), 'amount'], amount)
+                    .setIn(['players', state.get('playerOnTurn'), 'money'], player.get('money') - amount)
                 ;
             });
             break;

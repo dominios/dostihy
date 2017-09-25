@@ -9,9 +9,11 @@ class BetButton extends React.Component {
         super(props);
 
         this.state = {
-            betting: false
+            betting: false,
+            amount: 0
         };
 
+        this.handleChange = this.handleChange.bind(this);
         this.handleStartBet = this.handleStartBet.bind(this);
         this.handleCancelBet = this.handleCancelBet.bind(this);
         this.handleConfirmBet = this.handleConfirmBet.bind(this);
@@ -20,6 +22,12 @@ class BetButton extends React.Component {
     componentWillReceiveProps (nextProps) {
         this.setState({
             isChoosingHorse: nextProps.isChoosingHorse
+        });
+    }
+
+    handleChange (event) {
+        this.setState({
+            amount: event.target.value
         });
     }
 
@@ -37,8 +45,9 @@ class BetButton extends React.Component {
     }
 
     handleConfirmBet () {
-        if (this.props.betInProcess) {
-            this.props.confirmBet(this.props.betInProcess, 10000);
+        // @todo check againts player money: not possible to bet more than he has
+        if (this.props.betInProcess && this.state.amount >= 20) {
+            this.props.confirmBet(this.props.betInProcess, this.state.amount);
         }
     }
 
@@ -50,8 +59,15 @@ class BetButton extends React.Component {
 
     renderBet () {
         return <div>
-            <input type="number" placeholder="to bet"/>
-            <button onClick={this.handleConfirmBet}>
+            <input
+                type="number"
+                placeholder="to bet"
+                value={this.state.amount}
+                onChange={this.handleChange}
+            />
+            <button
+                onClick={this.handleConfirmBet}
+            >
                 Confirm
             </button>
         </div>;
