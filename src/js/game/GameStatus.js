@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PlayerInlineHelper from '../utils/helpers/Player';
 import MoneyInlineHelper from '../utils/helpers/Money';
+import { playerActionsReducer } from "../data/reducers";
 
 /**
  * Game Status Class.
@@ -82,6 +83,18 @@ class GameStatus extends React.Component {
                         &nbsp;for
                         &nbsp;<MoneyInlineHelper amount={message.get('amount')}/>.
                     </span>;
+
+                case 'bet':
+                    return <span>
+                        <PlayerInlineHelper player={message.get('player')}/>
+                        &nbsp;bet
+                        &nbsp;<MoneyInlineHelper amount={message.get('amount')}/>
+                        &nbsp;on
+                        &nbsp;{message.getIn(['where', 'text', 'name'])}
+                        &nbsp;(owner)
+                        &nbsp;@TODO HELPER
+                    </span>;
+
                 default:
                     break;
             }

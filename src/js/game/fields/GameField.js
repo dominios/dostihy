@@ -60,6 +60,7 @@ class GameField extends React.Component {
                     horse={this.props.field.get('horse')}
                     points={points || 0} owner={owner}
                     canBet={canBet}
+                    bet={this.props.bets.get(this.props.field.get('id'), false)}
                 />;
 
                 if (canBet) {
@@ -100,7 +101,8 @@ GameField.propTypes = {
 const mapStateToProps = function (state) {
     return {
         isChoosingHorse: isBetting(state.get('currentRound')),
-        currentPlayer: state.getIn(['players', state.get('playerOnTurn')])
+        currentPlayer: state.getIn(['players', state.get('playerOnTurn')]),
+        bets: state.getIn(['currentRound', 'bets'])
     }
 };
 
