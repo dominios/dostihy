@@ -26,7 +26,7 @@ const initialState = Immutable.fromJS({
             name: 'Dominik',
             field: 0,
             money: 30000,
-            ai: true,
+            ai: false,
             inventory: [],
             // inventory: [2, 4, 38, 40],
             racingPoints: {
@@ -51,33 +51,33 @@ const initialState = Immutable.fromJS({
             }
 
         },
-        {
-            index: 2,
-            name: 'Player 3',
-            field: 0,
-            money: 30000,
-            ai: true,
-            inventory: [],
-            racingPoints: {}
-        },
-        {
-            index: 3,
-            name: 'Player 4',
-            field: 0,
-            money: 30000,
-            ai: true,
-            inventory: [],
-            racingPoints: {}
-        },
-        {
-            index: 4,
-            name: 'Player 5',
-            field: 0,
-            money: 30000,
-            ai: true,
-            inventory: [],
-            racingPoints: {}
-        },
+        // {
+        //     index: 2,
+        //     name: 'Player 3',
+        //     field: 0,
+        //     money: 30000,
+        //     ai: true,
+        //     inventory: [],
+        //     racingPoints: {}
+        // },
+        // {
+        //     index: 3,
+        //     name: 'Player 4',
+        //     field: 0,
+        //     money: 30000,
+        //     ai: true,
+        //     inventory: [],
+        //     racingPoints: {}
+        // },
+        // {
+        //     index: 4,
+        //     name: 'Player 5',
+        //     field: 0,
+        //     money: 30000,
+        //     ai: true,
+        //     inventory: [],
+        //     racingPoints: {}
+        // },
         // {
         //     index: 5,
         //     name: 'Player 6',
