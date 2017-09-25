@@ -10,7 +10,7 @@ import {
     END_TURN,
     START_BET,
     payBank,
-    payPlayer
+    payPlayer, CHOOSE_HORSE_BET, CONFIRM_BET
 } from './actions';
 
 import {
@@ -18,7 +18,7 @@ import {
     STATE_AFTER_THROW,
     STATE_BEFORE_PAYMENT,
     STATE_AFTER_PAYMENT,
-    STATE_BETTING_SELECT
+    STATE_BETTING_CHOOSE, STATE_BETTING_BET
 } from './states';
 
 import { getRandomThrow, getOwner, countPayAmount } from '../utils/utils';
@@ -357,7 +357,29 @@ export const playerActionsReducer = function (state = initialState, action) {
         }
 
         case START_BET: {
-            newState = state.setIn(['currentRound', 'state'], STATE_BETTING_SELECT);
+            newState = state.setIn(['currentRound', 'state'], STATE_BETTING_CHOOSE);
+            break;
+        }
+
+        case CHOOSE_HORSE_BET: {
+            newState = state.withMutations(state => {
+                state
+                    .setIn(['currentRound', 'state'], STATE_BETTING_BET)
+                    .setIn(['currentRound', 'bets', action.horse.get('id'), 'status'], 'IN_PROCESS')
+                    .setIn(['currentRound', 'bets', action.horse.get('id'), 'horse'], action.horse)
+                ;
+            });
+            break;
+        }
+
+        case CONFIRM_BET: {
+            newState = state.withMutations(state => {
+                state
+                    .setIn(['currentRound', 'state'], STATE_BEFORE_THROW)
+                    .setIn(['currentRound', 'bets', action.horse.get('id'), 'status'], 'CONFIRMED')
+                    .setIn(['currentRound', 'bets', action.horse.get('id'), 'amount'], +action.amount)
+                ;
+            });
             break;
         }
 
@@ -366,7 +388,7 @@ export const playerActionsReducer = function (state = initialState, action) {
             break;
     }
 
-    console.info(newState.toJS());
-
+    console.info(`NEXT STATE (${newState.getIn(['currentRound', 'state'])}):`, newState.toJS());
     return newState;
+
 };

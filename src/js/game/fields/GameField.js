@@ -1,20 +1,31 @@
 import React from 'react';
+import { connect } from "react-redux";
 import PropTypes from 'prop-types';
 import HorseField from './HorseField';
 import ParkingField from './ParkingField';
 import { getOwner } from '../../utils/utils';
-import { STATE_BETTING_SELECT } from "../../data/states";
-import { connect } from "react-redux";
+import { isBetting, STATE_BETTING_CHOOSE } from "../../data/states";
+import { TYPE_HORSE, TYPE_STABLES, TYPE_TRAINER, TYPE_TRANSPORT } from "../../utils/constants";
+import { chooseHorseBet } from "../../data/actions";
 
 class GameField extends React.Component {
 
     constructor (props) {
         super(props);
+
+        this.handleChooseBet = this.handleChooseBet.bind(this);
+    }
+
+    handleChooseBet () {
+        if (!this.props.isChoosingHorse) {
+            return;
+        }
+        this.props.chooseForBet(this.props.field);
     }
 
     renderOwnership (field) {
 
-        const applicable = ['HORSE', 'TRAINER', 'STABLES', 'TRANSPORT'];
+        const applicable = [TYPE_HORSE, TYPE_TRAINER, TYPE_STABLES, TYPE_TRANSPORT];
 
         if (applicable.indexOf(field.get('type')) === -1) {
             return null;
@@ -43,7 +54,7 @@ class GameField extends React.Component {
         switch (this.props.field.get('type')) {
             case 'HORSE': {
                 const points = owner && owner.getIn(['racingPoints', this.props.field.get('id')]);
-                const canBet = this.props.isBetting && points >= 3 && owner !== this.props.currentPlayer
+                const canBet = this.props.isChoosingHorse && points >= 3 && owner !== this.props.currentPlayer
 
                 content = <HorseField
                     horse={this.props.field.get('horse')}
@@ -66,6 +77,7 @@ class GameField extends React.Component {
         return (<div
             id={`field-${this.props.field.get('id')}`}
             className={classList.join(' ')}
+            onClick={this.handleChooseBet}
         >
             <div className="pawns-placeholder"></div>
             <div className="field-label">
@@ -87,9 +99,15 @@ GameField.propTypes = {
 
 const mapStateToProps = function (state) {
     return {
-        isBetting: state.getIn(['currentRound', 'state']) === STATE_BETTING_SELECT,
+        isChoosingHorse: isBetting(state.get('currentRound')),
         currentPlayer: state.getIn(['players', state.get('playerOnTurn')])
     }
 };
 
-export default connect(mapStateToProps)(GameField);
+const mapDispatchToProps = function (dispatch) {
+    return {
+        chooseForBet: (horse) => dispatch(chooseHorseBet(horse))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(GameField);

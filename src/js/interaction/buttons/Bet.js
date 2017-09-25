@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { startBet } from '../../data/actions';
+import { confirmBet, startBet } from '../../data/actions';
+import { STATE_BETTING_BET, STATE_BETTING_CHOOSE } from "../../data/states";
 
 class BetButton extends React.Component {
 
@@ -13,28 +14,50 @@ class BetButton extends React.Component {
 
         this.handleStartBet = this.handleStartBet.bind(this);
         this.handleCancelBet = this.handleCancelBet.bind(this);
+        this.handleConfirmBet = this.handleConfirmBet.bind(this);
+    }
+
+    componentWillReceiveProps (nextProps) {
+        this.setState({
+            isChoosingHorse: nextProps.isChoosingHorse
+        });
     }
 
     handleStartBet () {
         this.setState({
-            betting: true
+            isChoosingHorse: true
         });
         this.props.startBet();
     }
 
     handleCancelBet () {
         this.setState({
-            betting: false
+            isChoosingHorse: false
         });
     }
 
-    renderAmount () {
+    handleConfirmBet () {
+        if (this.props.betInProcess) {
+            this.props.confirmBet(this.props.betInProcess, 10000);
+        }
+    }
+
+    renderChooseHorse () {
         return <div>
-            <input type="number" placeholder="Chose amount"/>
+            Choose Horse
         </div>;
     }
 
     renderBet () {
+        return <div>
+            <input type="number" placeholder="to bet"/>
+            <button onClick={this.handleConfirmBet}>
+                Confirm
+            </button>
+        </div>;
+    }
+
+    renderStartBetting () {
         return <button
             onClick={this.handleStartBet}
         >
@@ -43,21 +66,38 @@ class BetButton extends React.Component {
     }
 
     render () {
-        return this.state.betting ? this.renderAmount() : this.renderBet();
+        if (this.props.isChoosingHorse) {
+            return this.renderChooseHorse();
+        } else if (this.props.isBetting) {
+            return this.renderBet();
+        } else {
+            return this.renderStartBetting();
+        }
     }
 
 }
 
-BetButton.defaultProps = {
-};
+const mapStateToProps = (state) => {
 
-BetButton.propTypes = {
-};
+    let bets = state.getIn(['currentRound', 'bets']);
+    let betInProcess = false;
+    if (bets.size > 0) {
+        betInProcess = bets.filter(item => item.get('status') === 'IN_PROCESS').first();
+    }
 
-const mapDispatchToProps = function (dispatch) {
     return {
-        startBet: () => dispatch(startBet())
+        currentRound: state.get('currentRound'),
+        isChoosingHorse: state.getIn(['currentRound', 'state']) === STATE_BETTING_CHOOSE,
+        isBetting: state.getIn(['currentRound', 'state']) === STATE_BETTING_BET,
+        betInProcess: betInProcess && betInProcess.get('horse')
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        startBet: () => dispatch(startBet()),
+        confirmBet: (horse, amount) => dispatch(confirmBet(horse, amount))
     }
 };
 
-export default connect(undefined, mapDispatchToProps)(BetButton);
+export default connect(mapStateToProps, mapDispatchToProps)(BetButton);

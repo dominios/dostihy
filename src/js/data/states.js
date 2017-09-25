@@ -6,7 +6,7 @@ export const STATE_AFTER_THROW = 'STATE_AFTER_THROW';
 export const STATE_BEFORE_PAYMENT = 'STATE_BEFORE_PAYMENT';
 export const STATE_AFTER_PAYMENT = 'STATE_AFTER_PAYMENT';
 
-export const STATE_BETTING_SELECT = 'STATE_BETTING_SELECT';
+export const STATE_BETTING_CHOOSE = 'STATE_BETTING_CHOOSE';
 export const STATE_BETTING_BET = 'STATE_BETTING_BET';
 
 /*
@@ -25,7 +25,7 @@ export function isBeforeThrow (currentRound) {
 
     const statesBefore = [
         STATE_BEFORE_THROW,
-        STATE_BETTING_SELECT,
+        STATE_BETTING_CHOOSE,
         STATE_BETTING_BET
     ];
 
@@ -34,4 +34,8 @@ export function isBeforeThrow (currentRound) {
 
 export function isAfterThrow (currentRound) {
     return !isBeforeThrow(currentRound);
+}
+
+export function isBetting (currentRound) {
+    return currentRound.get('state') === STATE_BETTING_CHOOSE;
 }

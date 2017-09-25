@@ -17,7 +17,8 @@ const initialState = Immutable.fromJS({
         player: 0,
         state: STATE_BEFORE_THROW,
         actionRequired: null,
-        floatingInfo: []
+        floatingInfo: [],
+        bets: {}
     },
     playerOnTurn: 0,
     players: [

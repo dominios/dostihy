@@ -3,6 +3,8 @@
  *
  * @return {Number}
  */
+import { STATE_BEFORE_THROW } from "../data/states";
+
 export function getRandomThrow () {
 
     let result = false; // prompt('Roll', 1);
@@ -13,7 +15,7 @@ export function getRandomThrow () {
     const values = [1, 2, 3, 4, 5, 6];
 
     function shuffle (array) {
-        var currentIndex = array.length, temporaryValue, randomIndex;
+        let currentIndex = array.length, temporaryValue, randomIndex;
 
         // While there remain elements to shuffle...
         while (0 !== currentIndex) {

@@ -8,10 +8,7 @@ import PayButton from './buttons/Pay';
 import ThrowDiceButton from './buttons/ThrowDice';
 import EndTurnButton from './buttons/EndTurn';
 import { PAY_BANK, PAY_PLAYER } from '../data/actions';
-import {
-    STATE_AFTER_THROW, STATE_BEFORE_THROW, STATE_AFTER_PAYMENT, STATE_BETTING_SELECT,
-    isBeforeThrow
-} from '../data/states';
+import { isBeforeThrow, isAfterThrow } from '../data/states';
 
 /**
  * Toolbox Class.
@@ -22,11 +19,10 @@ class Toolbox extends React.Component {
 
     /**
      * @todo
-     * @return {Boolean|boolean|XML}
+     * @return {XML}
      */
     renderBet () {
-        const isBeforeThrow = this.props.currentRound.get('state') === STATE_BEFORE_THROW;
-        return canBet(this.props.currentPlayer) && isBeforeThrow && <BetButton/>;
+        return canBet(this.props.currentPlayer) && isBeforeThrow(this.props.currentRound) && <BetButton/>;
     }
 
     /**
@@ -37,12 +33,18 @@ class Toolbox extends React.Component {
         const actionRequired = this.props.currentRound.get('actionRequired');
         if (actionRequired) {
             if (actionRequired.get('type') === PAY_BANK) {
-                return <PayButton amount={actionRequired.get('amount')} recipient="BANK"
-                                  action={actionRequired.toJS()}/>;
+                return <PayButton
+                    amount={actionRequired.get('amount')}
+                    recipient="BANK"
+                    action={actionRequired.toJS()}
+                />;
             }
             if (actionRequired.get('type') === PAY_PLAYER) {
-                return <PayButton amount={actionRequired.get('amount')} recipient={actionRequired.getIn(['to', 'name'])}
-                                  action={actionRequired.toJS()}/>;
+                return <PayButton
+                    amount={actionRequired.get('amount')}
+                    recipient={actionRequired.getIn(['to', 'name'])}
+                    action={actionRequired.toJS()}
+                />;
             }
         }
     }
@@ -53,8 +55,7 @@ class Toolbox extends React.Component {
      */
     renderBuyRacingPoints () {
         const field = this.props.currentField;
-        const isAfterThrow = this.props.currentRound.get('state') === STATE_AFTER_THROW;
-        if (isAfterThrow && field.get('type') === 'HORSE' && hasFullStable(this.props.currentPlayer, field.getIn(['horse', 'group']))) {
+        if (isAfterThrow(this.props.currentRound) && field.get('type') === 'HORSE' && hasFullStable(this.props.currentPlayer, field.getIn(['horse', 'group']))) {
             return <BuyTokensButton
                 currentPlayer={this.props.currentPlayer}
                 currentField={this.props.currentField}
@@ -65,8 +66,7 @@ class Toolbox extends React.Component {
 
     renderBuy () {
         const allowed = ['HORSE', 'TRAINER', 'TRANSPORT', 'STABLES'];
-        const isAfterThrow = this.props.currentRound.get('state') === STATE_AFTER_THROW;
-        if (isAfterThrow && allowed.indexOf(this.props.currentField.get('type')) !== -1) {
+        if (isAfterThrow(this.props.currentRound) && allowed.indexOf(this.props.currentField.get('type')) !== -1) {
             return <BuyButton
                 currentPlayer={this.props.currentPlayer}
                 currentPlayerIndex={this.props.currentPlayerIndex}
@@ -102,9 +102,7 @@ class Toolbox extends React.Component {
     }
 
     renderEndTurn () {
-        const statesAfterThrow = [STATE_AFTER_THROW, STATE_AFTER_PAYMENT];
-        const isAfterThrow = statesAfterThrow.indexOf(this.props.currentRound.get('state')) !== -1;
-        if (!this.props.currentRound.get('actionRequired') && isAfterThrow) {
+        if (!this.props.currentRound.get('actionRequired') && isAfterThrow(this.props.currentRound)) {
             return <EndTurnButton/>;
         }
     }

@@ -58,3 +58,20 @@ export function startBet () {
         type: START_BET
     }
 }
+
+export const CHOOSE_HORSE_BET = 'CHOOSE_HORSE_BET';
+export function chooseHorseBet (horse) {
+    return {
+        type: CHOOSE_HORSE_BET,
+        horse: horse
+    }
+}
+
+export const CONFIRM_BET = 'CONFIRM_BET';
+export function confirmBet (horse, amount) {
+    return {
+        type: CONFIRM_BET,
+        horse: horse,
+        amount: amount
+    };
+}
