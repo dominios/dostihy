@@ -69,6 +69,7 @@ export const playerActionsReducer = function (state = initialState, action) {
 
             const currentPlayer = state.getIn(['players', state.get('playerOnTurn')]);
             const currentPosition = currentPlayer.get('field');
+            const bets = state.getIn(['currentRound', 'bets']);
             let money = currentPlayer.get('money');
             let parkingMoney = state.get('parkingMoney');
             let distancRounds = currentPlayer.get('distancRounds') || 0;
@@ -150,8 +151,22 @@ export const playerActionsReducer = function (state = initialState, action) {
 
             const field = state.getIn(['fields', newPosition]);
             const distanceCovered = number3 ? number2 + number3 : number1 + number2;
-            let actionRequired = resolveActionRequired(state, currentPlayer, field, distanceCovered);
+            const actionRequired = resolveActionRequired(state, currentPlayer, field, distanceCovered);
 
+            const betIncomes = {};
+            if (bets.size) {
+                const missedBets = bets.filter(bet => {
+                    return bet.getIn(['horse', 'id']) !== field.get('id')
+                });
+                missedBets.forEach(missed => {
+                    const owner = getOwner(missed.get('horse'), state.get('players'));
+                    const key = owner.get('index');
+                    if (!betIncomes.hasOwnProperty(key)) {
+                        betIncomes[key] = 0;
+                    }
+                    betIncomes[key] += missed.get('amount');
+                });
+            }
 
             if (field.get('type') === 'PARKING') {
                 money += parkingMoney;
@@ -192,6 +207,17 @@ export const playerActionsReducer = function (state = initialState, action) {
                     .setIn(['players', state.get('playerOnTurn'), 'stoppedRounds'], stoppedRounds)
                     .set('parkingMoney', parkingMoney)
                 ;
+
+                // incomes for missed bets
+                Object.entries(betIncomes).forEach(income => {
+                    const playerMoneyPath = ['players', income[0], 'money'];
+                    state.setIn(playerMoneyPath, state.getIn(playerMoneyPath) + income[1]);
+                    logs.push({
+                        type: 'missedBet',
+                        who: state.getIn(['players', income[0]]),
+                        amount: income[1]
+                    });
+                });
 
                 // write logs
                 for (let i = 0; i < logs.length; i++) {

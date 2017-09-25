@@ -65,21 +65,32 @@ class GameStatus extends React.Component {
                     </span>;
 
                 case 'payVisit':
-                    return <span>
-                        <PlayerInlineHelper player={message.get('who')}/>
-                        &nbsp;payed
-                        &nbsp;<MoneyInlineHelper amount={message.get('amount')}/>
-                        &nbsp;to
-                        &nbsp;<PlayerInlineHelper player={message.get('to')}/>
-                        &nbsp;for visiting
-                        &nbsp;{message.get('what')}.
-                    </span>;
+                    if (message.get('amount') > 0) {
+                        return <span>
+                            <PlayerInlineHelper player={message.get('who')}/>
+                            &nbsp;payed
+                            &nbsp;<MoneyInlineHelper amount={message.get('amount')}/>
+                            &nbsp;to
+                            &nbsp;<PlayerInlineHelper player={message.get('to')}/>
+                            &nbsp;for visiting
+                            &nbsp;{message.get('what')}.
+                        </span>;
+                    } else {
+                        return <span>
+                            <PlayerInlineHelper player={message.get('to')}/>
+                            &nbsp;payed
+                            &nbsp;<PlayerInlineHelper player={message.get('who')}/>
+                            &nbsp;<MoneyInlineHelper amount={message.get('amount') * -1}/>
+                            &nbsp;for successful bet on
+                            &nbsp;{message.get('what')}.
+                         </span>;
+                    }
 
                 case 'buy':
                     return <span>
                         <PlayerInlineHelper player={message.get('player')}/>
                         &nbsp;bought
-                        &nbsp;<i>{ message.getIn(['what', 'text', 'name'])}</i>
+                        &nbsp;<i>{message.getIn(['what', 'text', 'name'])}</i>
                         &nbsp;for
                         &nbsp;<MoneyInlineHelper amount={message.get('amount')}/>.
                     </span>;
@@ -93,6 +104,14 @@ class GameStatus extends React.Component {
                         &nbsp;{message.getIn(['where', 'text', 'name'])}
                         &nbsp;(owner)
                         &nbsp;@TODO HELPER
+                    </span>;
+
+                case 'missedBet':
+                    return <span>
+                        <PlayerInlineHelper player={message.get('who')}/>
+                        &nbsp;received
+                        &nbsp;<MoneyInlineHelper amount={message.get('amount')}/>
+                        &nbsp;for missed bet(s).
                     </span>;
 
                 default:
@@ -110,7 +129,7 @@ class GameStatus extends React.Component {
      */
     renderLog () {
         return (<div className="logs">
-            { this.props.log.map((message, index) => {
+            {this.props.log.map((message, index) => {
                 return <div key={index}>{this.renderMessage(message)}</div>
             })}
         </div>)
@@ -123,7 +142,7 @@ class GameStatus extends React.Component {
      */
     render () {
         return (<div className="box-info game-status">
-            { this.renderLog() }
+            {this.renderLog()}
         </div>);
     }
 }
