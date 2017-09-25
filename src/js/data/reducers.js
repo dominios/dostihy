@@ -61,6 +61,8 @@ export const gameStateReducer = function (state = initialState, action) {
 
 export const playerActionsReducer = function (state = initialState, action) {
 
+    let newState;
+
     switch (action.type) {
 
         case THROW_DICE: {
@@ -176,7 +178,7 @@ export const playerActionsReducer = function (state = initialState, action) {
                 logs.push(`You're stopped for 1 round.`);
             }
 
-            return state.withMutations(state => {
+            newState = state.withMutations(state => {
                 // movement
                 state
                     .set('diceThrows', Immutable.fromJS(throws))
@@ -196,10 +198,11 @@ export const playerActionsReducer = function (state = initialState, action) {
                     state.set('log', state.get('log').push(Immutable.fromJS(logs[i])));
                 }
             });
+            break;
         }
 
         case PAY_BANK: {
-            return state.withMutations(state => {
+            newState = state.withMutations(state => {
                 const player = state.getIn(['players', action.from.index]);
                 const info = Immutable.fromJS({
                     type: 'PLAYER_TO_BANK',
@@ -222,10 +225,11 @@ export const playerActionsReducer = function (state = initialState, action) {
                     .set('log', state.get('log').push(log))
                 ;
             });
+            break;
         }
 
         case PAY_PLAYER: {
-            return state.withMutations(state => {
+            newState = state.withMutations(state => {
                 const from = state.getIn(['players', action.from.index]);
                 const to = state.getIn(['players', action.to.index]);
                 const log = Immutable.fromJS({
@@ -243,6 +247,7 @@ export const playerActionsReducer = function (state = initialState, action) {
                     .set('log', state.get('log').push(log))
                 ;
             });
+            break;
         }
 
         case END_TURN: {
@@ -270,7 +275,7 @@ export const playerActionsReducer = function (state = initialState, action) {
                 }
             }
 
-            return state.withMutations(state => {
+            newState = state.withMutations(state => {
                 state
                     .setIn(['currentRound', 'rolls'], Immutable.fromJS([]))
                     .setIn(['currentRound', 'state'], STATE_BEFORE_THROW)
@@ -283,6 +288,7 @@ export const playerActionsReducer = function (state = initialState, action) {
                     state.set('log', state.get('log').push(Immutable.fromJS(logs[i])));
                 }
             });
+            break;
         }
 
         case BUY_CARD: {
@@ -319,7 +325,7 @@ export const playerActionsReducer = function (state = initialState, action) {
                 amount: withdraw
             };
 
-            return state.withMutations(state => {
+            newState = state.withMutations(state => {
                 const inventory = state.getIn(['players', action.playerIndex, 'inventory']);
                 state
                     .set('log', state.get('log').push(Immutable.fromJS(log)))
@@ -327,6 +333,7 @@ export const playerActionsReducer = function (state = initialState, action) {
                     .setIn(['players', action.playerIndex, 'inventory'], inventory.push(fieldId))
                 ;
             });
+            break;
         }
 
         case BUY_TOKENS: {
@@ -340,18 +347,26 @@ export const playerActionsReducer = function (state = initialState, action) {
             const tokensBefore = state.getIn(pathPoints, 0);
             const moneyBefore = state.getIn(pathMoney);
 
-            return state.withMutations(state => {
+            newState = state.withMutations(state => {
                 state
                     .setIn(pathPoints, tokensBefore + action.tokensCount)
                     .setIn(pathMoney, (moneyBefore - (action.tokensCount * cardInfo.getIn(['horse', 'racingCost']))))
                 ;
             });
+            break;
         }
 
         case START_BET: {
-            return state.setIn(['currentRound', 'state'], STATE_BETTING_SELECT);
+            newState = state.setIn(['currentRound', 'state'], STATE_BETTING_SELECT);
+            break;
         }
+
+        default:
+            newState = state;
+            break;
     }
 
-    return state;
+    console.info(newState.toJS());
+
+    return newState;
 };
