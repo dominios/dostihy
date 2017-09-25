@@ -40,15 +40,15 @@ function resolveActionRequired (state, player, field, distanceCovered = 0) {
     if (claimable.indexOf(field.get('type')) !== -1) {
         const owner = getOwner(field, state.get('players'));
         if (owner && owner.get('index') !== player.get('index')) {
-            return payPlayer(countPayAmount(field, owner), player, owner, field, distanceCovered);
+            return payPlayer(countPayAmount(field, owner, state.getIn(['currentRound', 'bets']), distanceCovered), player, owner, field);
         }
     }
 
     if (field.get('type') === 'VET') {
-        if (field.get('id') == 5) {
+        if (+field.get('id') === 5) {
             return payBank(500, player, field);
         }
-        if (field.get('id') == 39) {
+        if (+field.get('id') === 39) {
             return payBank(1000, player, field);
         }
     }

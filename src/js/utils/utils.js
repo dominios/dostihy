@@ -7,7 +7,7 @@ import { STATE_BEFORE_THROW } from "../data/states";
 
 export function getRandomThrow () {
 
-    let result = false; // prompt('Roll', 1);
+    let result = prompt('Roll', 1);
     if (result) {
         return parseInt(result, 10);
     }
@@ -56,16 +56,23 @@ export function getOwner (field, players) {
  *
  * @param {Object} field field to calculate amount for.
  * @param {Object} player field owner.
+ * @param {Object} bets current round bets.
  * @param {Number} movementSize number of fields travelled.
  *
  * @return {Number}
  */
-export function countPayAmount (field, player, movementSize = 0) {
+export function countPayAmount (field, player, bets, movementSize = 0) {
 
     if (field.get('type') === 'HORSE') {
         const points = player.getIn(['racingPoints', field.get('id')]) || 0;
         if (points) {
-            return field.getIn(['horse', 'racingFees', (points - 1)]);
+            const racingCost = field.getIn(['horse', 'racingFees', (points - 1)]);
+            if (bets && bets.size) {
+                const betAmount = bets.getIn([field.get('id'), 'amount'], 0);
+                return racingCost - (betAmount * 10);
+            } else {
+                return racingCost;
+            }
         }
         return field.getIn(['horse', 'standardFee']);
     }
