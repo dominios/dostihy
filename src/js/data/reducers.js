@@ -199,7 +199,7 @@ export const playerActionsReducer = function (state = initialState, action) {
                         logs.push({
                             type: 'finance3',
                             who: currentPlayer,
-                            amount: payment3,
+                            amount: payment3 * -1,
                             count: sum
                         });
                         break;
@@ -222,7 +222,7 @@ export const playerActionsReducer = function (state = initialState, action) {
                         logs.push({
                             type: 'finance9',
                             who: currentPlayer,
-                            amount: payment9,
+                            amount: payment9 * -1,
                             countStandard: racingPointsCount.standard,
                             countMain: racingPointsCount.mainCount
                         });
@@ -241,6 +241,9 @@ export const playerActionsReducer = function (state = initialState, action) {
                 }
 
                 financeCardPointer++;
+                if (financeCardPointer >= (state.get('financeCards').size - 1)) {
+                    financeCardPointer = 0;
+                }
             }
 
             if (field.get('type') === TYPE_FORTUNE) {
