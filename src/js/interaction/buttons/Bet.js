@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { confirmBet, startBet } from '../../data/actions';
 import { STATE_BETTING_BET, STATE_BETTING_CHOOSE } from "../../data/states";
+import MoneyInlineHelper from "../../utils/helpers/Money";
 
 class BetButton extends React.Component {
 
@@ -13,21 +14,72 @@ class BetButton extends React.Component {
             amount: 0
         };
 
-        this.handleChange = this.handleChange.bind(this);
         this.handleStartBet = this.handleStartBet.bind(this);
         this.handleCancelBet = this.handleCancelBet.bind(this);
         this.handleConfirmBet = this.handleConfirmBet.bind(this);
+
+        this.handleAdd20 = this.handleAdd20.bind(this);
+        this.handleAdd100 = this.handleAdd100.bind(this);
+        this.handleAdd200 = this.handleAdd200.bind(this);
+        this.handleAdd400 = this.handleAdd400.bind(this);
+        this.handleAdd1000 = this.handleAdd1000.bind(this);
+        this.handleAdd2000 = this.handleAdd2000.bind(this);
+        this.handleAdd10000 = this.handleAdd10000.bind(this);
+        this.handleReset = this.handleReset.bind(this);
     }
 
     componentWillReceiveProps (nextProps) {
         this.setState({
-            isChoosingHorse: nextProps.isChoosingHorse
+            isChoosingHorse: nextProps.isChoosingHorse,
+            amount: 0
         });
     }
 
-    handleChange (event) {
+    handleAdd20 () {
         this.setState({
-            amount: event.target.value
+            amount: this.state.amount + 20
+        });
+    }
+
+    handleAdd100 () {
+        this.setState({
+            amount: this.state.amount + 100
+        });
+    }
+
+    handleAdd200 () {
+        this.setState({
+            amount: this.state.amount + 200
+        });
+    }
+
+    handleAdd400 () {
+        this.setState({
+            amount: this.state.amount + 400
+        });
+    }
+
+    handleAdd1000 () {
+        this.setState({
+            amount: this.state.amount + 1000
+        });
+    }
+
+    handleAdd2000 () {
+        this.setState({
+            amount: this.state.amount + 2000
+        });
+    }
+
+    handleAdd10000 () {
+        this.setState({
+            amount: this.state.amount + 10000
+        });
+    }
+
+    handleReset () {
+        this.setState({
+            amount: 0
         });
     }
 
@@ -59,17 +111,36 @@ class BetButton extends React.Component {
 
     renderBet () {
         return <div>
-            <input
-                type="number"
-                placeholder="to bet"
-                value={this.state.amount}
-                onChange={this.handleChange}
-            />
-            <button
-                onClick={this.handleConfirmBet}
-            >
-                Confirm
+            <button onClick={this.handleAdd20}>
+                <MoneyInlineHelper amount={20}/>
             </button>
+            <button onClick={this.handleAdd100}>
+                <MoneyInlineHelper amount={100}/>
+            </button>
+            <button onClick={this.handleAdd200}>
+                <MoneyInlineHelper amount={200}/>
+            </button>
+            <button onClick={this.handleAdd400}>
+                <MoneyInlineHelper amount={400}/>
+            </button>
+            <button onClick={this.handleAdd1000}>
+                <MoneyInlineHelper amount={1000}/>
+            </button>
+            <button onClick={this.handleAdd2000}>
+                <MoneyInlineHelper amount={2000}/>
+            </button>
+            <button onClick={this.handleAdd10000}>
+                <MoneyInlineHelper amount={10000}/>
+            </button>
+            <button onClick={this.handleReset}>
+                RESET
+            </button>
+            {this.state.amount > 0
+                ? <button onClick={this.handleConfirmBet}>
+                    BET <MoneyInlineHelper amount={this.state.amount}/>
+                </button>
+                : null
+            }
         </div>;
     }
 
