@@ -193,23 +193,50 @@ export const playerActionsReducer = function (state = initialState, action) {
                 switch (cardId) {
                     case 3:
                         const sum = racingPointsCount.standard + racingPointsCount.mainCount;
-                        money += (sum * cardInfo.balance);
-                        parkingMoney += (sum * (cardInfo.balance * -1));
+                        const payment3 = sum * cardInfo.balance;
+                        money += payment3;
+                        parkingMoney += (sum * (payment3 * -1));
+                        logs.push({
+                            type: 'finance3',
+                            who: currentPlayer,
+                            amount: payment3,
+                            count: sum
+                        });
                         break;
                     case 5:
                         money += (state.get('players').size - 1) * 200;
+                        state.get('players').forEach(player => {
+                            if (player !== currentPlayer) {
+                                logs.push({
+                                    type: 'finance5',
+                                    who: player,
+                                    to: currentPlayer
+                                });
+                            }
+                        });
                         break;
                     case 9:
-                        money += (racingPointsCount.standard * cardInfo.balance[0]);
-                        money += (racingPointsCount.mainCount * cardInfo.balance[1]);
-                        parkingMoney += (racingPointsCount.standard * (cardInfo.balance[0] * -1));
-                        parkingMoney += (racingPointsCount.mainCount * (cardInfo.balance[1] * -1));
+                        const payment9 = racingPointsCount.standard * cardInfo.balance[0] + racingPointsCount.mainCount * cardInfo.balance[1];
+                        money += payment9;
+                        parkingMoney += (payment9 * -1);
+                        logs.push({
+                            type: 'finance9',
+                            who: currentPlayer,
+                            amount: payment9,
+                            countStandard: racingPointsCount.standard,
+                            countMain: racingPointsCount.mainCount
+                        });
                         break;
                     default:
                         money += cardInfo.balance;
                         if (cardInfo.balance < 0) {
                             parkingMoney += cardInfo.balance * -1;
                         }
+                        logs.push({
+                            type: 'finance',
+                            who: currentPlayer,
+                            amount: cardInfo.balance
+                        });
                         break;
                 }
 

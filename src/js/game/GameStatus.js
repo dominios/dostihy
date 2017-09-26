@@ -114,6 +114,48 @@ class GameStatus extends React.Component {
                         &nbsp;for missed bet(s).
                     </span>;
 
+                case 'finance':
+                    if (message.get('amount') > 0) {
+                        return <span>
+                            <PlayerInlineHelper player={message.get('who')}/>
+                            &nbsp;gained
+                            &nbsp;<MoneyInlineHelper amount={message.get('amount')}/>.
+                        </span>;
+                    } else {
+                        return <span>
+                            <PlayerInlineHelper player={message.get('who')}/>
+                            &nbsp;payed fee
+                            &nbsp;<MoneyInlineHelper amount={message.get('amount') * -1}/>.
+                        </span>
+                    }
+
+                case 'finance3':
+                    return <span>
+                        <PlayerInlineHelper player={message.get('who')}/>
+                        &nbsp;payed
+                        &nbsp;<MoneyInlineHelper amount={message.get('amount')}/>
+                        &nbsp;for total of {message.get('count')} racing points.
+                    </span>;
+
+                case 'finance5':
+                    return <span>
+                        <PlayerInlineHelper player={message.get('who')}/>
+                        &nbsp;payed
+                        &nbsp;<MoneyInlineHelper amount={200}/>
+                        &nbsp;to
+                        &nbsp;<PlayerInlineHelper player={message.get('to')}/>
+                        &nbsp;as a birthday gift.
+                    </span>;
+
+                case 'finance9':
+                    return <span>
+                        <PlayerInlineHelper player={message.get('who')}/>
+                        &nbsp;payed
+                        &nbsp;<MoneyInlineHelper amount={message.get('amount')}/>
+                        &nbsp;for total of {`${message.get('countStandard')} standard and ${message.get('countMain')} main racing points.`}
+                    </span>;
+
+
                 default:
                     break;
             }
