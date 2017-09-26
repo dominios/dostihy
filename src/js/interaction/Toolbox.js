@@ -7,8 +7,10 @@ import BuyTokensButton from './buttons/BuyTokens';
 import PayButton from './buttons/Pay';
 import ThrowDiceButton from './buttons/ThrowDice';
 import EndTurnButton from './buttons/EndTurn';
-import { PAY_BANK, PAY_PLAYER } from '../data/actions';
+import MoveButton from './buttons/Move';
 import { isBeforeThrow, isAfterThrow } from '../data/states';
+import { PAY_BANK, PAY_PLAYER } from '../data/actions';
+import { TYPE_FORTUNE } from "../utils/constants";
 
 /**
  * Toolbox Class.
@@ -101,6 +103,14 @@ class Toolbox extends React.Component {
         }
     }
 
+    renderMove () {
+        if (this.props.currentRound.get('actionRequired') && this.props.currentField.get('type') === TYPE_FORTUNE) {
+            return <MoveButton
+                action={this.props.currentRound.get('actionRequired').toJS()}
+            />;
+        }
+    }
+
     renderEndTurn () {
         if (!this.props.currentRound.get('actionRequired') && isAfterThrow(this.props.currentRound)) {
             return <EndTurnButton/>;
@@ -126,6 +136,7 @@ class Toolbox extends React.Component {
             {this.renderBuyRacingPoints()}
             {this.renderPay()}
             {this.renderThrowDice()}
+            {this.renderMove()}
             {this.renderEndTurn()}
         </div>;
     }

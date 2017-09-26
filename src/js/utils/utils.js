@@ -30,7 +30,9 @@ export function shuffle (array) {
  */
 export function getRandomThrow () {
 
-    let result = false;//prompt('Roll', 1);
+    // let result = false;
+    let result = prompt('Roll', 7);
+
     if (result) {
         return parseInt(result, 10);
     }

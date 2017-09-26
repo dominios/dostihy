@@ -13,7 +13,8 @@ import {
     CHOOSE_HORSE_BET,
     CONFIRM_BET,
     payBank,
-    payPlayer
+    payPlayer,
+    moveTo, MOVE_TO
 } from './actions';
 
 import {
@@ -25,7 +26,11 @@ import {
 
 import { getRandomThrow, getOwner, countPayAmount, getPlayersRacingPointsCount } from '../utils/utils';
 import initialState from "./initialState";
-import { TYPE_FINANCE, TYPE_FORTUNE, TYPE_PARKING } from "../utils/constants";
+import {
+    TYPE_DOPING,
+    TYPE_FINANCE, TYPE_FORTUNE, TYPE_HORSE, TYPE_PARKING, TYPE_STABLES, TYPE_TRAINER, TYPE_TRANSPORT,
+    TYPE_VET
+} from "../utils/constants";
 
 /**
  * Checks action which should be triggered based on field type.
@@ -39,7 +44,7 @@ import { TYPE_FINANCE, TYPE_FORTUNE, TYPE_PARKING } from "../utils/constants";
  */
 function resolveActionRequired (state, player, field, distanceCovered = 0) {
 
-    const claimable = ['HORSE', 'TRAINER', 'STABLES', 'TRANSPORT'];
+    const claimable = [TYPE_HORSE, TYPE_TRAINER, TYPE_STABLES, TYPE_TRANSPORT];
     if (claimable.indexOf(field.get('type')) !== -1) {
         const owner = getOwner(field, state.get('players'));
         if (owner && owner.get('index') !== player.get('index')) {
@@ -47,7 +52,7 @@ function resolveActionRequired (state, player, field, distanceCovered = 0) {
         }
     }
 
-    if (field.get('type') === 'VET') {
+    if (field.get('type') === TYPE_VET) {
         if (+field.get('id') === 5) {
             return payBank(500, player, field);
         }
@@ -55,7 +60,16 @@ function resolveActionRequired (state, player, field, distanceCovered = 0) {
             return payBank(1000, player, field);
         }
     }
+}
 
+function resolveFortuneAction (player, fortuneCard, field) {
+    switch (fortuneCard.id) {
+        case 1:
+            return moveTo(+field.get('id') - 4);
+            break;
+        default:
+            break;
+    }
 }
 
 export const gameStateReducer = function (state = initialState, action) {
@@ -68,6 +82,7 @@ export const playerActionsReducer = function (state = initialState, action) {
 
     switch (action.type) {
 
+        case MOVE_TO:
         case THROW_DICE: {
 
             const currentPlayer = state.getIn(['players', state.get('playerOnTurn')]);
@@ -85,78 +100,83 @@ export const playerActionsReducer = function (state = initialState, action) {
             let financeCardPointer = state.get('currentFinanceCardPointer');
             let fortuneCardPointer = state.get('currentFortuneCardPointer');
 
-            // get throw results
             const throws = state.get('diceThrows').toJS();
-            number1 = getRandomThrow();
-            throws.push(number1);
-            logs.push({
-                type: 'throw',
-                player: currentPlayer,
-                roll: number1
-            });
-            if (number1 === 6) {
-                number2 = getRandomThrow();
-                throws.push(number2);
+            let newPosition;
+            if (!action.fieldId) {
+
+                // get throw results
+                number1 = getRandomThrow();
+                throws.push(number1);
                 logs.push({
                     type: 'throw',
                     player: currentPlayer,
-                    roll: number2
+                    roll: number1
                 });
-            }
+                if (number1 === 6) {
+                    number2 = getRandomThrow();
+                    throws.push(number2);
+                    logs.push({
+                        type: 'throw',
+                        player: currentPlayer,
+                        roll: number2
+                    });
+                }
 
-            let newPosition;
-            if (currentPosition === 10 && distancRounds > 0) {
-                // DISTANCE
-                if (number1 !== 6) {
-                    newPosition = currentPosition;
-                    distancRounds--;
-                    logs.push(`Stopped for next ${distancRounds} rounds.`);
-                } else {
-                    logs.push(`Distance cleared!`);
-                    if (number2 === 6) {
-                        number3 = getRandomThrow();
-                        logs.push({
-                            type: 'throw',
-                            player: currentPlayer,
-                            roll: number3
-                        });
-                        if (number3 === 6) {
-                            newPosition = currentPosition;
-                            distancRounds = 3;
-                            logs.push(`DISTANCE!`);
-                        } else {
-                            newPosition = currentPosition + number2 + number3;
-                        }
+                if (currentPosition === 10 && distancRounds > 0) {
+                    // DISTANCE
+                    if (number1 !== 6) {
+                        newPosition = currentPosition;
+                        distancRounds--;
+                        logs.push(`Stopped for next ${distancRounds} rounds.`);
                     } else {
-                        newPosition = currentPosition + number2;
+                        logs.push(`Distance cleared!`);
+                        if (number2 === 6) {
+                            number3 = getRandomThrow();
+                            logs.push({
+                                type: 'throw',
+                                player: currentPlayer,
+                                roll: number3
+                            });
+                            if (number3 === 6) {
+                                newPosition = currentPosition;
+                                distancRounds = 3;
+                                logs.push(`DISTANCE!`);
+                            } else {
+                                newPosition = currentPosition + number2 + number3;
+                            }
+                        } else {
+                            newPosition = currentPosition + number2;
+                        }
+                    }
+                } else {
+                    if (number1 === 6 && number2 === 6) {
+                        newPosition = 10;
+                        distancRounds = 3;
+                    } else {
+                        newPosition = currentPosition + number1 + number2;
                     }
                 }
-            } else {
-                if (number1 === 6 && number2 === 6) {
-                    newPosition = 10;
+
+                if (newPosition === 10 && currentPlayer.get('field') !== 10) {
+                    logs.push(`DISTANCE!`);
                     distancRounds = 3;
-                } else {
-                    newPosition = currentPosition + number1 + number2;
                 }
-            }
 
-            if (newPosition === 10 && currentPlayer.get('field') !== 10) {
-                logs.push(`DISTANCE!`);
-                distancRounds = 3;
-            }
-
-            if (newPosition >= 40) {
-                newPosition -= 40;
-                money += 4000;
-                logs.push({
-                    type: 'crossStart',
-                    player: currentPlayer
-                });
+                if (newPosition >= 40) {
+                    newPosition -= 40;
+                    money += 4000;
+                    logs.push({
+                        type: 'crossStart',
+                        player: currentPlayer
+                    });
+                }
+            } else {
+                newPosition = action.fieldId;
             }
 
             const field = state.getIn(['fields', newPosition]);
             const distanceCovered = number3 ? number2 + number3 : number1 + number2;
-            const actionRequired = resolveActionRequired(state, currentPlayer, field, distanceCovered);
+            let actionRequired = resolveActionRequired(state, currentPlayer, field, distanceCovered);
 
             const betIncomes = {};
             if (bets.size) {
@@ -247,11 +267,18 @@ export const playerActionsReducer = function (state = initialState, action) {
             }
 
             if (field.get('type') === TYPE_FORTUNE) {
-                console.warn('FORTUNE TODO');
-                // @todo
+                const cardId = state.getIn(['fortuneCards', fortuneCardPointer]);
+                const cardInfo = fortuneCards[cardId];
+                logs.push(cardInfo.text);
+                actionRequired = resolveFortuneAction(currentPlayer, cardInfo, field);
+
+                fortuneCardPointer++;
+                if (fortuneCardPointer >= (state.get('fortuneCards').size - 1)) {
+                    fortuneCardPointer = 0;
+                }
             }
 
-            if (field.get('type') === 'DOPING') {
+            if (field.get('type') === TYPE_DOPING) {
                 dopingRounds = 1;
                 logs.push(`You're stopped for 1 round.`);
             }

@@ -59,45 +59,62 @@ export const financeCards = {
 
 export const fortuneCards = {
     1: {
+        id: 1,
         text: 'Jdi o 3 pole zpět..'
     },
     2: {
+        id: 2,
         text: 'Zrušen distanc (kartu lze zachovat pro pozdější použití, nebo prodat).'
     },
     3: {
+        id: 3,
         text: 'Jedeš se zúčastnit trenérského kurzu. Postoupíš na nejbližší pole Trenér. Dostaneš 4.000, pokud jedeš dopředu přes Start.'
     },
     4: {
-        text: 'Zdržíš se na 2 kola.'
+        id: 4,
+        text: 'Zdržíš se na 2 kola.',
+        stop: 2
     },
     5: {
+        id: 5,
         text: 'Distanc (bez 4.000).'
     },
     6: {
+        id: 6,
         text: 'Zpět na nejbližší pole Finance.'
     },
     7: {
+        id: 7,
         text: 'Zpět na poslední pole ve hře (kůň Napoli), hráč obdrží 4.000.'
     },
     8: {
+        id: 8,
         text: 'Zpět na pole Distanc. Obdržíš 4.000, pokud jsi cestou zpět prošel Start.'
     },
     9: {
+        id: 9,
         text: 'Zpět na nejbližší pole Finance.'
     },
     10: {
+        id: 10,
         text: 'Zpět na start (hráč obdrží 4.000).'
     },
     11: {
+        id: 11,
         text: 'Zpět na start (bez 4.000).'
     },
     12: {
-        text: 'Zdržíš se na 2 kola.'
+        id: 12,
+        text: 'Zdržíš se na 2 kola.',
+        stop: 2
     },
     13: {
-        text: 'Zdržíš se na 1 kolo.'
+        id: 13,
+        text: 'Zdržíš se na 1 kolo.',
+        stop: 1
     },
     14: {
+        id: 14,
         text: 'Zpět na pole Parkoviště. Dostaneš 4.000, pokud jsi cestou zpět prošel start.',
     }
 };

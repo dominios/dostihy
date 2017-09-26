@@ -7,7 +7,7 @@ import {
 import { shuffle } from "../utils/utils";
 
 const financeCards = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
-const fortuneCards = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+const fortuneCards = ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
 
 const initialState = Immutable.fromJS({
     fields: fields,
@@ -53,42 +53,42 @@ const initialState = Immutable.fromJS({
             }
 
         },
-        {
-            index: 2,
-            name: 'Player 3',
-            field: 0,
-            money: 30000,
-            ai: true,
-            inventory: [],
-            racingPoints: {}
-        },
-        {
-            index: 3,
-            name: 'Player 4',
-            field: 0,
-            money: 30000,
-            ai: true,
-            inventory: [],
-            racingPoints: {}
-        },
-        {
-            index: 4,
-            name: 'Player 5',
-            field: 0,
-            money: 30000,
-            ai: true,
-            inventory: [],
-            racingPoints: {}
-        },
-        {
-            index: 5,
-            name: 'Player 6',
-            field: 0,
-            money: 30000,
-            ai: true,
-            inventory: [],
-            racingPoints: {}
-        },
+        // {
+        //     index: 2,
+        //     name: 'Player 3',
+        //     field: 0,
+        //     money: 30000,
+        //     ai: true,
+        //     inventory: [],
+        //     racingPoints: {}
+        // },
+        // {
+        //     index: 3,
+        //     name: 'Player 4',
+        //     field: 0,
+        //     money: 30000,
+        //     ai: true,
+        //     inventory: [],
+        //     racingPoints: {}
+        // },
+        // {
+        //     index: 4,
+        //     name: 'Player 5',
+        //     field: 0,
+        //     money: 30000,
+        //     ai: true,
+        //     inventory: [],
+        //     racingPoints: {}
+        // },
+        // {
+        //     index: 5,
+        //     name: 'Player 6',
+        //     field: 0,
+        //     money: 30000,
+        //     ai: true,
+        //     inventory: [],
+        //     racingPoints: {}
+        // },
     ],
     financeCards: financeCards,
     currentFinanceCardPointer: 0,
