@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import fields from './db/fields.json';
+import { financeCards, fortuneCards } from '../data/db/actionCards';
 
 import {
     THROW_DICE,
@@ -79,6 +80,8 @@ export const playerActionsReducer = function (state = initialState, action) {
             let number1 = 0;
             let number2 = 0;
             let number3 = 0;
+            let financeCardPointer = state.get('currentFinanceCardPointer');
+            let fortuneCardPointer = state.get('currentFortuneCardPointer');
 
             // get throw results
             const throws = state.get('diceThrows').toJS();
@@ -179,8 +182,28 @@ export const playerActionsReducer = function (state = initialState, action) {
             }
 
             if (field.get('type') === 'FINANCES') {
-                console.warn('FINANCES TODO');
-                // @todo
+                // pick a card
+                const cardInfo = financeCards[state.getIn(['financeCards', financeCardPointer])];
+                logs.push(cardInfo.text);
+                switch (cardInfo) {
+                    case 3:
+                        console.warn('FINANCES TODO');
+                        break;
+                    case 5:
+                        console.warn('FINANCES TODO');
+                        break;
+                    case 9:
+                        console.warn('FINANCES TODO');
+                        break;
+                    default:
+                        money += cardInfo.balance;
+                        if (cardInfo.balance < 0) {
+                            parkingMoney += cardInfo.balance * -1;
+                        }
+                        break;
+                }
+                // move pointer
+                financeCardPointer++;
             }
 
             if (field.get('type') === 'FORTUNE') {
@@ -206,6 +229,8 @@ export const playerActionsReducer = function (state = initialState, action) {
                     .setIn(['players', state.get('playerOnTurn'), 'dopingRounds'], dopingRounds)
                     .setIn(['players', state.get('playerOnTurn'), 'stoppedRounds'], stoppedRounds)
                     .set('parkingMoney', parkingMoney)
+                    .set('currentFinanceCardPointer', financeCardPointer)
+                    .set('currentFortuneCardPointer', fortuneCardPointer)
                 ;
 
                 // incomes for missed bets

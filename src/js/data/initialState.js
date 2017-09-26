@@ -98,9 +98,9 @@ const initialState = Immutable.fromJS({
         // },
     ],
     financeCards: shuffle(financeCards),
-    currentFinanceCardIndex: 0,
+    currentFinanceCardPointer: 0,
     fortuneCards: shuffle(fortuneCards),
-    currentFortuneCardIndex: 0,
+    currentFortuneCardPointer: 0,
     log: ['The Game has started']
 });
 
