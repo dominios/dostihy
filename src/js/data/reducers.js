@@ -401,7 +401,7 @@ export const playerActionsReducer = function (state = initialState, action) {
 
         case CONFIRM_BET: {
             const player = state.getIn(['players', state.get('playerOnTurn')]);
-            const amount = +action.amount;
+            const amount = state.getIn(['currentRound', 'bets', action.horse.get('id'), 'amount'], 0) + +action.amount;
             const logMessage = Immutable.fromJS({
                 type: 'bet',
                 player: player,
