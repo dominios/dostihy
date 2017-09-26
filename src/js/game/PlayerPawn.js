@@ -46,9 +46,14 @@ class PlayerPawn extends React.Component {
         let left = target.position().left;
 
         if (this.state.playersAtField.size > 1) {
-            left += this.props.playersAtField.filter(player => {
+            let playersBefore = this.props.playersAtField.filter(player => {
                 return player.get('index') < this.props.player.get('index');
-            }).size * 30;
+            }).size;
+            if (playersBefore >= 3) {
+                playersBefore -= 3;
+                top += 30;
+            }
+            left += playersBefore * 30;
         }
 
         $(`#pawn-${this.props.index}`).css({
