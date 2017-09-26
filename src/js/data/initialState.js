@@ -7,7 +7,7 @@ import {
 import { shuffle } from "../utils/utils";
 
 const financeCards = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
-const fortuneCards = ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+const fortuneCards = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
 
 const initialState = Immutable.fromJS({
     fields: fields,
