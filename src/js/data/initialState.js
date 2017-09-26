@@ -29,13 +29,13 @@ const initialState = Immutable.fromJS({
             field: 0,
             money: 30000,
             ai: false,
-            // inventory: [],
-            inventory: [2, 4, 38, 40],
+            inventory: [],
+            // inventory: [2, 4, 38, 40],
             racingPoints: {
-                2: 3,
-                4: 4,
-                38: 2,
-                40: 5
+                // 2: 3,
+                // 4: 4,
+                // 38: 2,
+                // 40: 5
             }
         },
         {
@@ -43,13 +43,13 @@ const initialState = Immutable.fromJS({
             name: 'Player 2',
             field: 0,
             money: 30000,
-            ai: false,
-            // inventory: [],
-            inventory: [12, 14, 15],
+            ai: true,
+            inventory: [],
+            // inventory: [12, 14, 15],
             racingPoints: {
-                12: 1,
-                14: 4,
-                15: 2
+                // 12: 1,
+                // 14: 4,
+                // 15: 2
             }
 
         },
@@ -58,13 +58,9 @@ const initialState = Immutable.fromJS({
             name: 'Player 3',
             field: 0,
             money: 30000,
-            ai: false,
-            inventory: [32, 33, 35],
-            racingPoints: {
-                32: 4,
-                33: 4,
-                35: 5
-            }
+            ai: true,
+            inventory: [],
+            racingPoints: {}
         },
         {
             index: 3,
@@ -75,24 +71,24 @@ const initialState = Immutable.fromJS({
             inventory: [],
             racingPoints: {}
         },
-        // {
-        //     index: 4,
-        //     name: 'Player 5',
-        //     field: 0,
-        //     money: 30000,
-        //     ai: true,
-        //     inventory: [],
-        //     racingPoints: {}
-        // },
-        // {
-        //     index: 5,
-        //     name: 'Player 6',
-        //     field: 0,
-        //     money: 30000,
-        //     ai: true,
-        //     inventory: [],
-        //     racingPoints: {}
-        // },
+        {
+            index: 4,
+            name: 'Player 5',
+            field: 0,
+            money: 30000,
+            ai: true,
+            inventory: [],
+            racingPoints: {}
+        },
+        {
+            index: 5,
+            name: 'Player 6',
+            field: 0,
+            money: 30000,
+            ai: true,
+            inventory: [],
+            racingPoints: {}
+        },
     ],
     financeCards: financeCards,
     currentFinanceCardPointer: 0,

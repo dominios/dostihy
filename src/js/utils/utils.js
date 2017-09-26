@@ -30,7 +30,7 @@ export function shuffle (array) {
  */
 export function getRandomThrow () {
 
-    let result = prompt('Roll', 1);
+    let result = false;//prompt('Roll', 1);
     if (result) {
         return parseInt(result, 10);
     }
@@ -173,4 +173,19 @@ export function getPlayersRacingPointsCount (player) {
         standard: standardCount,
         mainCount: mainCount
     };
+}
+
+/**
+ * Returns players on the field with given id.
+ *
+ * @param {string} fieldId field id.
+ * @param {List} players players
+ *
+ * @return {List}
+ */
+export function playersOnField (fieldId, players) {
+    return players.filter(player => {
+        // return +player.get('field') === +field.get('id');
+        return +player.get('field') === +fieldId
+    });
 }

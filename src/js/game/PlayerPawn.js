@@ -1,11 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 
 /**
  * Single Player Pawn Class.
  */
-export default class PlayerPawn extends React.Component {
+class PlayerPawn extends React.Component {
 
     /**
      * Constructor.
@@ -15,7 +16,8 @@ export default class PlayerPawn extends React.Component {
         super(props);
 
         this.state = {
-            position: props.player.get('field')
+            position: props.player.get('field'),
+            playersAtField: props.playersAtField
         };
     }
 
@@ -26,8 +28,13 @@ export default class PlayerPawn extends React.Component {
      */
     componentWillReceiveProps (nextProps) {
         this.setState({
-            position: nextProps.player.get('field')
+            position: nextProps.player.get('field'),
+            playersAtField: nextProps.playersAtField
         });
+    }
+
+    componentDidMount () {
+        this.componentDidUpdate();
     }
 
     /**
@@ -35,9 +42,18 @@ export default class PlayerPawn extends React.Component {
      */
     componentDidUpdate () {
         const target = $(`#field-${this.state.position + 1}`);
+        let top = target.position().top;
+        let left = target.position().left;
+
+        if (this.state.playersAtField.size > 1) {
+            left += this.props.playersAtField.filter(player => {
+                return player.get('index') < this.props.player.get('index');
+            }).size * 30;
+        }
+
         $(`#pawn-${this.props.index}`).css({
-            top: (target.position().top + 'px'),
-            left: (target.position().left + 'px')
+            top: top + 'px',
+            left: left + 'px'
         });
     }
 
@@ -47,13 +63,26 @@ export default class PlayerPawn extends React.Component {
      * @return {XML}
      */
     render () {
-        return <div className={`pawn player-background-${this.props.player.get('index')}`} id={`pawn-${this.props.index}`}>
+        return <div
+            className={`pawn player-background-${this.props.player.get('index')}`}
+            id={`pawn-${this.props.index}`}>
             <i className={`fa fa-${this.props.player.get('ai') ? 'tv' : 'user-o'}`}/>
-        </div> ;
+        </div>;
     }
 }
 
+
 PlayerPawn.propTypes = {
     index: PropTypes.number.isRequired,
-    player: PropTypes.object.isRequired
+    player: PropTypes.object.isRequired,
+    // playersAtField: PropTypes.number.isRequired
 };
+
+const mapStateToProps = state => {
+    return {
+        playersCount: state.get('players').size
+    };
+};
+
+export default connect(mapStateToProps)(PlayerPawn);
+
