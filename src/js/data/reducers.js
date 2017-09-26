@@ -63,17 +63,11 @@ function resolveActionRequired (state, player, field, distanceCovered = 0) {
     }
 }
 
-function resolveFortuneAction (player, fortuneCard, field) {
+function resolveFortuneAction (fortuneCard, field) {
     switch (fortuneCard.id) {
         case 1:
             // move 3 fields back
             return moveTo(+field.get('id') - 4);
-        case 2:
-            // player will be awarded with cancel distance
-            // no further action required
-            // @todo IMPLEMENT
-            console.warn('FORTUNE CARD NOT IMPLEMENTED');
-            break;
         case 3:
             // move to next trainer
             switch (+field.get('id')) {
@@ -84,10 +78,6 @@ function resolveFortuneAction (player, fortuneCard, field) {
                 case 37:
                     return moveTo(5, AWARD_CROSSING_START);
             }
-            break;
-        case 4:
-            // @todo stop for x rounds
-            console.warn('FORTUNE CARD NOT IMPLEMENTED');
             break;
         case 5:
             // distanc without 4000
@@ -124,14 +114,6 @@ function resolveFortuneAction (player, fortuneCard, field) {
         case 11:
             // back to start without 4000
             return moveTo(0);
-        case 12:
-            // @todo stop 2 rounds
-            console.warn('FORTUNE CARD NOT IMPLEMENTED');
-            break;
-        case 13:
-            // @todo stop 1 round
-            console.warn('FORTUNE CARD NOT IMPLEMENTED');
-            break;
         case 14:
             // back to parking, 4000 if crossing start
             switch (+field.get('id')) {
@@ -357,13 +339,35 @@ export const playerActionsReducer = function (state = initialState, action) {
             }
 
             if (field.get('type') === TYPE_FORTUNE) {
+
                 const cardId = state.getIn(['fortuneCards', fortuneCardPointer]);
                 const cardInfo = fortuneCards[cardId];
                 logs.push({
                     type: 'cardFortune',
                     text: cardInfo.text
                 });
-                actionRequired = resolveFortuneAction(currentPlayer, cardInfo, field);
+                actionRequired = resolveFortuneAction(cardInfo, field);
+                if (!actionRequired) {
+                    switch (cardInfo.id) {
+                        case 2:
+                            // @todo cancel distance
+                            break;
+                        case 4:
+                        case 12:
+                            stoppedRounds = 2;
+                            break;
+                        case 13:
+                            stoppedRounds = 1;
+                            break;
+                        default:
+                            break;
+                    }
+                    logs.push({
+                        type: 'stopped',
+                        who: currentPlayer,
+                        duration: stoppedRounds
+                    });
+                }
 
                 fortuneCardPointer++;
                 if (fortuneCardPointer >= (state.get('fortuneCards').size - 1)) {
@@ -474,9 +478,13 @@ export const playerActionsReducer = function (state = initialState, action) {
                 }
                 nextPlayer = state.getIn(['players', nextPlayerIndex]);
                 let dopingRounds = nextPlayer.get('dopingRounds');
+                let stoppedRounds = nextPlayer.get('stoppedRounds');
                 if (dopingRounds > 0) {
                     logs.push(`Player ${nextPlayer.get('name')} stopped due to doping.`);
                     state = state.setIn(['players', nextPlayerIndex, 'dopingRounds'], --dopingRounds);
+                } else if (stoppedRounds > 0) {
+                    logs.push(`Player ${nextPlayer.get('name')} stopped.`);
+                    state = state.setIn(['players', nextPlayerIndex, 'stoppedRounds'], --stoppedRounds);
                 } else {
                     playerResolved = true;
                     logs.push({

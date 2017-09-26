@@ -120,6 +120,14 @@ class GameStatus extends React.Component {
                         &nbsp;{message.get('text')}
                     </span>;
 
+                case 'stopped':
+                    return <span>
+                        <PlayerInlineHelper player={message.get('who')}/>
+                        &nbsp;is stopped for
+                        &nbsp;{message.get('duration')}
+                        &nbsp;round(s).
+                    </span>;
+
                 case 'cardFinance':
                     return <span>
                         <i className="fa fa-dollar"/>:
@@ -164,7 +172,8 @@ class GameStatus extends React.Component {
                         <PlayerInlineHelper player={message.get('who')}/>
                         &nbsp;payed
                         &nbsp;<MoneyInlineHelper amount={message.get('amount')}/>
-                        &nbsp;for total of {`${message.get('countStandard')} standard and ${message.get('countMain')} main racing points.`}
+                        &nbsp;
+                        for total of {`${message.get('countStandard')} standard and ${message.get('countMain')} main racing points.`}
                     </span>;
 
                 case 'award':
