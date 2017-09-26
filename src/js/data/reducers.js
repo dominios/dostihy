@@ -65,8 +65,66 @@ function resolveActionRequired (state, player, field, distanceCovered = 0) {
 function resolveFortuneAction (player, fortuneCard, field) {
     switch (fortuneCard.id) {
         case 1:
+            // move 3 fields back
             return moveTo(+field.get('id') - 4);
+        case 2:
+            // player will be awarded with cancel distance
+            // no further action required
+            // @todo IMPLEMENT
             break;
+        case 3:
+            // move to next trainer
+            switch (+field.get('id')) {
+                case 8:
+                    return moveTo(15);
+                case 23:
+                    return moveTo(25);
+                case 37:
+                    // @todo award player with money
+                    return moveTo(5);
+            }
+            break;
+        case 4:
+            // @todo stop for x rounds
+            break;
+        case 5:
+            // distanc without 4000
+            return moveTo(10);
+            break;
+        case 6:
+        case 9:
+            // move to next trainer
+            switch (+field.get('id')) {
+                case 8:
+                    return moveTo(2);
+                case 23:
+                    return moveTo(17);
+                case 37:
+                    return moveTo(33);
+            }
+            break;
+        case 7:
+            // move to napoli
+            // @todo add 4000
+            return moveTo(39);
+        case 8:
+            // distanc with (if crossing start) 4000
+            // @todo add 4000 if crossing start
+            return moveTo(10);
+        case 10:
+            // @todo add 4000
+            return moveTo(0);
+        case 11:
+            return moveTo(0);
+        case 12:
+            // @todo stop 2 rounds
+            break;
+        case 13:
+            // @todo stop 1 round
+            break;
+        case 14:
+            // @todo add 4000 if crossing start
+            return moveTo(20);
         default:
             break;
     }
@@ -172,6 +230,10 @@ export const playerActionsReducer = function (state = initialState, action) {
                 }
             } else {
                 newPosition = action.fieldId;
+                if (newPosition === 10) {
+                    logs.push(`DISTANCE!`);
+                    distancRounds = 3;
+                }
             }
 
             const field = state.getIn(['fields', newPosition]);
