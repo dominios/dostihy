@@ -162,3 +162,15 @@ export function getCurrentField (state) {
     const currentPlayer = getPlayerOnTurn(state);
     return state.getIn(['fields', currentPlayer.get('field')]);
 }
+
+export function getPlayersRacingPointsCount (player) {
+    let standardCount = 0;
+    let mainCount = 0;
+    player.get('racingPoints').forEach(pointsCount => {
+        pointsCount === 5 ? mainCount++ : standardCount += pointsCount;
+    });
+    return {
+        standard: standardCount,
+        mainCount: mainCount
+    };
+}

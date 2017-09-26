@@ -1,11 +1,8 @@
 import Immutable from 'immutable';
-import fields from './db/fields.json';
+import { fields } from './db/fields';
 
 import {
-    STATE_BEFORE_THROW,
-    STATE_AFTER_THROW,
-    STATE_BEFORE_PAYMENT,
-    STATE_AFTER_PAYMENT,
+    STATE_BEFORE_THROW
 } from './states';
 import { shuffle } from "../utils/utils";
 

@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import fields from './db/fields.json';
+import { fields } from './db/fields';
 import { financeCards, fortuneCards } from '../data/db/actionCards';
 
 import {
@@ -10,20 +10,22 @@ import {
     BUY_TOKENS,
     END_TURN,
     START_BET,
+    CHOOSE_HORSE_BET,
+    CONFIRM_BET,
     payBank,
-    payPlayer, CHOOSE_HORSE_BET, CONFIRM_BET
+    payPlayer
 } from './actions';
 
 import {
     STATE_BEFORE_THROW,
     STATE_AFTER_THROW,
-    STATE_BEFORE_PAYMENT,
     STATE_AFTER_PAYMENT,
     STATE_BETTING_CHOOSE, STATE_BETTING_BET
 } from './states';
 
-import { getRandomThrow, getOwner, countPayAmount } from '../utils/utils';
+import { getRandomThrow, getOwner, countPayAmount, getPlayersRacingPointsCount } from '../utils/utils';
 import initialState from "./initialState";
+import { TYPE_FINANCE, TYPE_FORTUNE, TYPE_PARKING } from "../utils/constants";
 
 /**
  * Checks action which should be triggered based on field type.
@@ -171,7 +173,7 @@ export const playerActionsReducer = function (state = initialState, action) {
                 });
             }
 
-            if (field.get('type') === 'PARKING') {
+            if (field.get('type') === TYPE_PARKING) {
                 money += parkingMoney;
                 logs.push({
                     type: 'parkingIncome',
@@ -181,19 +183,27 @@ export const playerActionsReducer = function (state = initialState, action) {
                 parkingMoney = 0;
             }
 
-            if (field.get('type') === 'FINANCES') {
-                // pick a card
-                const cardInfo = financeCards[state.getIn(['financeCards', financeCardPointer])];
+            if (field.get('type') === TYPE_FINANCE) {
+
+                const cardId = state.getIn(['financeCards', financeCardPointer]);
+                const cardInfo = financeCards[cardId];
+                const racingPointsCount = getPlayersRacingPointsCount(currentPlayer);
                 logs.push(cardInfo.text);
-                switch (cardInfo) {
+
+                switch (cardId) {
                     case 3:
-                        console.warn('FINANCES TODO');
+                        const sum = racingPointsCount.standard + racingPointsCount.mainCount;
+                        money += (sum * cardInfo.balance);
+                        parkingMoney += (sum * (cardInfo.balance * -1));
                         break;
                     case 5:
-                        console.warn('FINANCES TODO');
+                        money += (state.get('players').size - 1) * 200;
                         break;
                     case 9:
-                        console.warn('FINANCES TODO');
+                        money += (racingPointsCount.standard * cardInfo.balance[0]);
+                        money += (racingPointsCount.mainCount * cardInfo.balance[1]);
+                        parkingMoney += (racingPointsCount.standard * (cardInfo.balance[0] * -1));
+                        parkingMoney += (racingPointsCount.mainCount * (cardInfo.balance[1] * -1));
                         break;
                     default:
                         money += cardInfo.balance;
@@ -202,11 +212,11 @@ export const playerActionsReducer = function (state = initialState, action) {
                         }
                         break;
                 }
-                // move pointer
+
                 financeCardPointer++;
             }
 
-            if (field.get('type') === 'FORTUNE') {
+            if (field.get('type') === TYPE_FORTUNE) {
                 console.warn('FORTUNE TODO');
                 // @todo
             }
