@@ -297,7 +297,7 @@ export const playerActionsReducer = function (state = initialState, action) {
                     logs.push({
                         type: 'turnStarted',
                         player: nextPlayer
-                    })
+                    });
                 }
             }
 
@@ -307,6 +307,7 @@ export const playerActionsReducer = function (state = initialState, action) {
                     .setIn(['currentRound', 'state'], STATE_BEFORE_THROW)
                     .setIn(['currentRound', 'actionRequired'], null)
                     .setIn(['currentRound', 'floatingInfo'], new Immutable.List())
+                    .setIn(['currentRound', 'bets'], new Immutable.Map())
                     .set('playerOnTurn', nextPlayerIndex)
                 ;
                 // write logs
