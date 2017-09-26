@@ -7,6 +7,10 @@ import {
     STATE_BEFORE_PAYMENT,
     STATE_AFTER_PAYMENT,
 } from './states';
+import { shuffle } from "../utils/utils";
+
+const financeCards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+const fortuneCards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
 const initialState = Immutable.fromJS({
     fields: fields,
@@ -93,6 +97,10 @@ const initialState = Immutable.fromJS({
         //     racingPoints: {}
         // },
     ],
+    financeCards: shuffle(financeCards),
+    currentFinanceCardIndex: 0,
+    fortuneCards: shuffle(fortuneCards),
+    currentFortuneCardIndex: 0,
     log: ['The Game has started']
 });
 
