@@ -114,6 +114,18 @@ class GameStatus extends React.Component {
                         &nbsp;for missed bet(s).
                     </span>;
 
+                case 'cardFortune':
+                    return <span>
+                        <i className="fa fa-question"/>:
+                        &nbsp;{message.get('text')}
+                    </span>;
+
+                case 'cardFinance':
+                    return <span>
+                        <i className="fa fa-dollar"/>:
+                        &nbsp;{message.get('text')}
+                    </span>;
+
                 case 'finance':
                     if (message.get('amount') > 0) {
                         return <span>
@@ -153,6 +165,21 @@ class GameStatus extends React.Component {
                         &nbsp;payed
                         &nbsp;<MoneyInlineHelper amount={message.get('amount')}/>
                         &nbsp;for total of {`${message.get('countStandard')} standard and ${message.get('countMain')} main racing points.`}
+                    </span>;
+
+                case 'award':
+                    return <span>
+                        <PlayerInlineHelper player={message.get('who')}/>
+                        &nbsp;was awarded with
+                        &nbsp;<MoneyInlineHelper amount={message.get('amount')}/>
+                    </span>;
+
+                case 'awardStart':
+                    return <span>
+                        <PlayerInlineHelper player={message.get('who')}/>
+                        &nbsp;was awarded with
+                        &nbsp;<MoneyInlineHelper amount={message.get('amount')}/>
+                        &nbsp;for crossing a start.
                     </span>;
 
 

@@ -9,3 +9,6 @@ export const TYPE_FORTUNE = 'FORTUNE';
 export const TYPE_FINANCE = 'FINANCES';
 export const TYPE_DISTANCE = 'DISTANCE';
 export const TYPE_DOPING = 'DOPING';
+
+export const AWARD = 'AWARD';
+export const AWARD_CROSSING_START = 'AWARD_CROSSING_START';

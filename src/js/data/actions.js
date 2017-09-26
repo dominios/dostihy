@@ -77,9 +77,10 @@ export function confirmBet (horse, amount) {
 }
 
 export const MOVE_TO = 'MOVE_TO';
-export function moveTo (fieldId) {
+export function moveTo (fieldId, award = false) {
     return {
         type: MOVE_TO,
-        fieldId: fieldId
+        fieldId: fieldId,
+        award: award
     }
 }

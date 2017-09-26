@@ -27,6 +27,7 @@ import {
 import { getRandomThrow, getOwner, countPayAmount, getPlayersRacingPointsCount } from '../utils/utils';
 import initialState from "./initialState";
 import {
+    AWARD, AWARD_CROSSING_START,
     TYPE_DOPING,
     TYPE_FINANCE, TYPE_FORTUNE, TYPE_HORSE, TYPE_PARKING, TYPE_STABLES, TYPE_TRAINER, TYPE_TRANSPORT,
     TYPE_VET
@@ -71,6 +72,7 @@ function resolveFortuneAction (player, fortuneCard, field) {
             // player will be awarded with cancel distance
             // no further action required
             // @todo IMPLEMENT
+            console.warn('FORTUNE CARD NOT IMPLEMENTED');
             break;
         case 3:
             // move to next trainer
@@ -80,12 +82,12 @@ function resolveFortuneAction (player, fortuneCard, field) {
                 case 23:
                     return moveTo(25);
                 case 37:
-                    // @todo award player with money
-                    return moveTo(5);
+                    return moveTo(5, AWARD_CROSSING_START);
             }
             break;
         case 4:
             // @todo stop for x rounds
+            console.warn('FORTUNE CARD NOT IMPLEMENTED');
             break;
         case 5:
             // distanc without 4000
@@ -93,7 +95,7 @@ function resolveFortuneAction (player, fortuneCard, field) {
             break;
         case 6:
         case 9:
-            // move to next trainer
+            // move to next finance
             switch (+field.get('id')) {
                 case 8:
                     return moveTo(2);
@@ -105,25 +107,40 @@ function resolveFortuneAction (player, fortuneCard, field) {
             break;
         case 7:
             // move to napoli
-            // @todo add 4000
-            return moveTo(39);
+            return moveTo(39, AWARD);
         case 8:
-            // distanc with (if crossing start) 4000
-            // @todo add 4000 if crossing start
-            return moveTo(10);
+            // distanc with 4000 if crossing start
+            switch (+field.get('id')) {
+                case 8:
+                    return moveTo(10, AWARD_CROSSING_START);
+                case 23:
+                case 37:
+                    return moveTo(10);
+            }
+            break;
         case 10:
-            // @todo add 4000
-            return moveTo(0);
+            // back to start, 4000
+            return moveTo(0, AWARD);
         case 11:
+            // back to start without 4000
             return moveTo(0);
         case 12:
             // @todo stop 2 rounds
+            console.warn('FORTUNE CARD NOT IMPLEMENTED');
             break;
         case 13:
             // @todo stop 1 round
+            console.warn('FORTUNE CARD NOT IMPLEMENTED');
             break;
         case 14:
-            // @todo add 4000 if crossing start
+            // back to parking, 4000 if crossing start
+            switch (+field.get('id')) {
+                case 8:
+                    return moveTo(20, AWARD_CROSSING_START);
+                case 23:
+                case 37:
+                    return moveTo(20);
+            }
             return moveTo(20);
         default:
             break;
@@ -234,6 +251,14 @@ export const playerActionsReducer = function (state = initialState, action) {
                     logs.push(`DISTANCE!`);
                     distancRounds = 3;
                 }
+                if (action.award) {
+                    money += 4000;
+                    logs.push({
+                        type: action.award === AWARD ? 'award' : 'awardStart',
+                        who: currentPlayer,
+                        amount: 4000
+                    });
+                }
             }
 
             const field = state.getIn(['fields', newPosition]);
@@ -270,7 +295,10 @@ export const playerActionsReducer = function (state = initialState, action) {
                 const cardId = state.getIn(['financeCards', financeCardPointer]);
                 const cardInfo = financeCards[cardId];
                 const racingPointsCount = getPlayersRacingPointsCount(currentPlayer);
-                logs.push(cardInfo.text);
+                logs.push({
+                    type: 'cardFinance',
+                    text: cardInfo.text
+                });
 
                 switch (cardId) {
                     case 3:
@@ -331,7 +359,10 @@ export const playerActionsReducer = function (state = initialState, action) {
             if (field.get('type') === TYPE_FORTUNE) {
                 const cardId = state.getIn(['fortuneCards', fortuneCardPointer]);
                 const cardInfo = fortuneCards[cardId];
-                logs.push(cardInfo.text);
+                logs.push({
+                    type: 'cardFortune',
+                    text: cardInfo.text
+                });
                 actionRequired = resolveFortuneAction(currentPlayer, cardInfo, field);
 
                 fortuneCardPointer++;
