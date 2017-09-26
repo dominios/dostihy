@@ -21,11 +21,25 @@ class PlayersInfo extends React.Component {
     renderInventory (player) {
         return <section className="inventory">
             Inventory: {player.get('inventory').map(item => {
-            const field = this.props.fields.filter(field => item === +field.get('id')).get(0);
-            return <span key={field.get('id')} className={`inventory-item field-${field.get('type').toLowerCase()} stable-${field.getIn(['horse', 'group'], 'none')}`}>
-                {field.getIn(['text', 'name'])}
-            </span>
-        })}
+                if (item === -1) {
+                    return <span
+                        key="-1"
+                        className="inventory-item"
+                    >
+                        Cancel distance
+                    </span>
+                } else {
+                    const field = this.props.fields.filter(field => item === +field.get('id')).get(0);
+                    return <span
+                        key={field.get('id')}
+                        className={`inventory-item field-${field.get('type').toLowerCase()} stable-${field.getIn(['horse', 'group'], 'none')}`}
+                    >
+                    {field.getIn(['text', 'name'])}
+                </span>
+                }
+            }
+        )
+        }
         </section>;
     }
 

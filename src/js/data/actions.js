@@ -84,3 +84,11 @@ export function moveTo (fieldId, award = false) {
         award: award
     }
 }
+
+export const CANCEL_DISTANC = 'CANCEL_DISTANC';
+export function cancelDistanc (player) {
+    return {
+        type: CANCEL_DISTANC,
+        player: player
+    };
+}

@@ -12,9 +12,11 @@ import {
     START_BET,
     CHOOSE_HORSE_BET,
     CONFIRM_BET,
+    MOVE_TO,
+    CANCEL_DISTANC,
     payBank,
     payPlayer,
-    moveTo, MOVE_TO
+    moveTo
 } from './actions';
 
 import {
@@ -142,7 +144,7 @@ export const playerActionsReducer = function (state = initialState, action) {
         case MOVE_TO:
         case THROW_DICE: {
 
-            const currentPlayer = state.getIn(['players', state.get('playerOnTurn')]);
+            let currentPlayer = state.getIn(['players', state.get('playerOnTurn')]);
             const currentPosition = currentPlayer.get('field');
             const bets = state.getIn(['currentRound', 'bets']);
             let money = currentPlayer.get('money');
@@ -156,6 +158,7 @@ export const playerActionsReducer = function (state = initialState, action) {
             let number3 = 0;
             let financeCardPointer = state.get('currentFinanceCardPointer');
             let fortuneCardPointer = state.get('currentFortuneCardPointer');
+            let cancelDopingAwarded = false;
 
             const throws = state.get('diceThrows').toJS();
             let newPosition;
@@ -350,7 +353,7 @@ export const playerActionsReducer = function (state = initialState, action) {
                 if (!actionRequired) {
                     switch (cardInfo.id) {
                         case 2:
-                            // @todo cancel distance
+                            cancelDopingAwarded = true;
                             break;
                         case 4:
                         case 12:
@@ -396,6 +399,12 @@ export const playerActionsReducer = function (state = initialState, action) {
                     .set('currentFinanceCardPointer', financeCardPointer)
                     .set('currentFortuneCardPointer', fortuneCardPointer)
                 ;
+
+                if (cancelDopingAwarded) {
+                    const inventoryPath = ['players', state.get('playerOnTurn'), 'inventory'];
+                    state.setIn(inventoryPath, state.getIn(inventoryPath).push(-1));
+                    state.set('fortuneCards', state.get('fortuneCards').filter(card => card !== 2));
+                }
 
                 // incomes for missed bets
                 Object.entries(betIncomes).forEach(income => {
@@ -608,6 +617,20 @@ export const playerActionsReducer = function (state = initialState, action) {
                     .setIn(['currentRound', 'bets', action.horse.get('id'), 'amount'], amount)
                     .setIn(['players', state.get('playerOnTurn'), 'money'], player.get('money') - amount)
                     .set('log', state.get('log').push(logMessage))
+                ;
+            });
+            break;
+        }
+
+        case CANCEL_DISTANC: {
+            newState = state.withMutations(state => {
+                // add card back to the end and remove it from players inventory
+                const inventoryPath = ['players', action.player.get('index'), 'inventory'];
+                const distancePath = ['players', action.player.get('index'), 'distancRounds'];
+                state
+                    .set('fortuneCards', state.get('fortuneCards').push(2))
+                    .setIn(inventoryPath, state.getIn(inventoryPath).filter(item => item !== -1))
+                    .setIn(distancePath, 0)
                 ;
             });
             break;

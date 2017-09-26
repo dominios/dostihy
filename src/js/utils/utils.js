@@ -191,3 +191,13 @@ export function playersOnField (fieldId, players) {
         return +player.get('field') === +fieldId
     });
 }
+
+/**
+ * Checks if given player has the cancel distanc action card.
+ *
+ * @param {Map} player
+ * @return {boolean}
+ */
+export function hasCancelDistanc (player) {
+    return player.get('inventory').filter(item => item === -1).size === 1;
+}

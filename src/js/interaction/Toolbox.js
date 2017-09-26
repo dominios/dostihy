@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getOwner, hasFullStable, canBet, getPlayerOnTurn, getCurrentField } from '../utils/utils';
+import { getOwner, hasFullStable, canBet, getPlayerOnTurn, getCurrentField, hasCancelDistanc } from '../utils/utils';
 import BetButton from './buttons/Bet';
 import BuyButton from './buttons/Buy';
 import BuyTokensButton from './buttons/BuyTokens';
@@ -10,7 +10,8 @@ import EndTurnButton from './buttons/EndTurn';
 import MoveButton from './buttons/Move';
 import { isBeforeThrow, isAfterThrow } from '../data/states';
 import { PAY_BANK, PAY_PLAYER } from '../data/actions';
-import { TYPE_FORTUNE } from "../utils/constants";
+import { TYPE_DISTANCE, TYPE_FORTUNE } from "../utils/constants";
+import CancelDistanc from "./buttons/CancelDistanc";
 
 /**
  * Toolbox Class.
@@ -111,6 +112,17 @@ class Toolbox extends React.Component {
         }
     }
 
+    renderCancelDistanc () {
+        if (isBeforeThrow(this.props.currentRound)
+            && this.props.currentField.get('type') === TYPE_DISTANCE
+            && hasCancelDistanc(this.props.currentPlayer)
+        ) {
+            return <CancelDistanc
+                player={this.props.currentPlayer}
+            />;
+        }
+    }
+
     renderEndTurn () {
         if (!this.props.currentRound.get('actionRequired') && isAfterThrow(this.props.currentRound)) {
             return <EndTurnButton/>;
@@ -137,6 +149,7 @@ class Toolbox extends React.Component {
             {this.renderPay()}
             {this.renderThrowDice()}
             {this.renderMove()}
+            {this.renderCancelDistanc()}
             {this.renderEndTurn()}
         </div>;
     }
