@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.html",
+  "private": true,
+  "engines": {
+    "node": "6.*"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "./node_modules/.bin/eslint src/**/*.js && ./node_modules/.bin/webpack-dev-server --progress --colors --inline --port 9090"
@@ -39,6 +43,8 @@
     "redux-logger": "^2.8.1",
     "redux-thunk": "^2.2.0",
     "resolve-url-loader": "^2.0.2",
-    "url-loader": "^0.5.8"
+    "url-loader": "^0.5.8",
+    "cfenv": "^1.0.x",
+    "dotenv": "^4.0.0"
   }
 }

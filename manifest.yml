@@ -1,0 +1,5 @@
+---
+applications:
+ - name: dostihy
+   random-route: true
+   memory: 256M
